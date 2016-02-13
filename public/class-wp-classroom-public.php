@@ -100,4 +100,13 @@ class WP_Classroom_Public {
 
 	}
 
+	public function get_wp_classroom_template($single_template) {
+	     global $post;
+
+	     if ($post->post_type == 'wp_classroom') {
+	          $single_template = dirname( __FILE__ ) . '/partials/wp-classroom-public-display.php';
+	     }
+	     return $single_template;
+	}
+
 }
