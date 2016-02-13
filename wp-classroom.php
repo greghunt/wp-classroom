@@ -13,7 +13,7 @@
  * @package           WP_Classroom
  *
  * @wordpress-plugin
- * Plugin Name:       Wordpress Classroom Plugin
+ * Plugin Name:       Classroom
  * Plugin URI:        https://github.com/greghunt/wp-classroom
  * Description:       Create a multimedia classroom within your WordPress site.
  * Version:           1.0.0
