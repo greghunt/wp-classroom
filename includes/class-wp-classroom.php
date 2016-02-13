@@ -114,10 +114,16 @@ class WP_Classroom {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-classroom-admin.php';
 
 		/**
+		 * The class responsible adding metaboxes
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-classroom-metabox.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-classroom-public.php';
+
 
 		$this->loader = new WP_Classroom_Loader();
 
