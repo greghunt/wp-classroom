@@ -18,7 +18,7 @@
  *
  * @package    WP_Classroom
  * @subpackage WP_Classroom/public
- * @author     Your Name <email@example.com>
+ * @author     Greg Hunt <freshbrewedweb@gmail.com>
  */
 class WP_Classroom_Public {
 
@@ -100,13 +100,87 @@ class WP_Classroom_Public {
 
 	}
 
-	public function get_wp_classroom_template($single_template) {
-	     global $post;
+	/**
+	 * Registers all shortcodes at once
+	 *
+	 * @return [type] [description]
+	 */
+	public function register_shortcodes() {
+		add_shortcode( 'course_list', array( $this, 'course_list_shortcode' ) );
+	} // register_shortcodes()
 
-	     if ($post->post_type == 'wp_classroom') {
-	          $single_template = dirname( __FILE__ ) . '/partials/wp-classroom-public-display.php';
-	     }
-	     return $single_template;
+
+	/**
+	 * Processes shortcode
+	 *
+	 * @param   array	$atts		The attributes from the shortcode
+	 *
+	 * @uses	get_course_class_list
+	 *
+	 * @return	str	$html		Output the HTML
+	 */
+	public function course_list_shortcode( $atts ) {
+		$defaults['orderby'] 		= 'date';
+		$args			= shortcode_atts( $defaults, $atts, 'course_list' );
+		$classes 		= $this->get_course_class_list( $args );
+
+		$html = '<ol>';
+		foreach( $classes->posts as $class ) {
+			$html .= '<li><a href="'. get_permalink($class) .'">';
+			$html .= $class->post_title;
+			$html .= '</a></li>';
+		}
+		$html .= '</ol>';
+
+		return $html;
+	} // shortcode()
+
+
+	public function get_wp_classroom_template($single_template) {
+     global $post;
+
+     if ($post->post_type == 'wp_classroom') {
+        $single_template = dirname( __FILE__ ) . '/partials/wp-classroom-public-display.php';
+     }
+     return $single_template;
+	}
+
+
+	public function get_course_class_list( array $args ) {
+		global $post;
+		$return = '';
+
+		//Current Courses
+		$course_terms = array();
+		$courses = wp_get_post_terms($post->ID, 'wp_course');
+		foreach( $courses as $course ) {
+			$course_terms[] = $course->slug;
+		}
+
+		$default_args = array(
+			'post_type' => 'wp_classroom',
+			'tax_query' => array( //Only Include classes from current courses
+				array(
+					'taxonomy' => 'wp_course',
+					'field'    => 'slug',
+					'terms'    => $course_terms,
+				),
+			),
+			'orderby' => 'date',
+			'order' => 'ASC',
+		);
+		//Combine defaults with passed args
+		$args = array_merge($default_args, $args);
+
+		$query = new WP_Query( $args );
+
+		if ( 0 == $query->found_posts ) {
+			$return = '<div class="alert alert-warning">' . __('Thank you for your interest! There are no job openings at this time', 'wp-classroom') . '.</div>';
+		} else {
+			$return = $query;
+		}
+
+		return $return;
 	}
 
 }

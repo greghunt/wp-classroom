@@ -19,16 +19,17 @@
       <h1 class="entry-title"><?php the_title(); ?></h1>
       <div class="meta"><?php echo get_the_term_list( $post->ID, 'wp_course', 'Course: ', ', ' ); ?></div>
     </header>
+    <div class="class-multimedia">
     <?php
       $video = get_post_meta(get_the_ID(), 'class_media_video', TRUE);
-      $embed_code = wp_oembed_get( $video );
-      echo $embed_code;
+      echo wp_oembed_get( $video );
     ?>
+    </div>
     <div class="entry-content">
       <?php the_content(); ?>
     </div>
     <footer>
-      <?php wp_link_pages(['before' => '<nav class="page-nav"><p>' . __('Pages:', 'sage'), 'after' => '</p></nav>']); ?>
+      <?= apply_filters('course_list') ?>
     </footer>
     <?php comments_template('/templates/comments.php'); ?>
   </article>

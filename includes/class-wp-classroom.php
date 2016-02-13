@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The file that defines the core plugin class
  *
@@ -179,7 +178,18 @@ class WP_Classroom {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 		$this->loader->add_filter( 'single_template', $plugin_public, 'get_wp_classroom_template' );
 
-	}
+		$this->loader->add_action( 'init', $plugin_public, 'register_shortcodes' );
+
+		/**
+		 * Action instead of template tag.
+		 *
+		 * do_action( 'course_list' );
+		 *
+		 * @link 	http://nacin.com/2010/05/18/rethinking-template-tags-in-plugins/
+		 */
+		$this->loader->add_action( 'course_list', $plugin_public, 'course_list_shortcode' );
+
+}
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
