@@ -194,6 +194,11 @@ class WP_Classroom_Admin {
 	 		'items_list'                 => __( 'Course list', 'wp-classroom' ),
 	 		'items_list_navigation'      => __( 'Course list navigation', 'wp-classroom' ),
 	 	);
+		$rewrite = array(
+			'slug'                       => 'course',
+			'with_front'                 => true,
+			'hierarchical'               => false,
+		);
 	 	$args = array(
 	 		'labels'                     => $labels,
 	 		'hierarchical'               => true,
@@ -202,6 +207,7 @@ class WP_Classroom_Admin {
 	 		'show_admin_column'          => true,
 	 		'show_in_nav_menus'          => true,
 	 		'show_tagcloud'              => true,
+	 		'rewrite'              			 => $rewrite,
 	 	);
 	 	register_taxonomy( 'wp_course', array( 'wp_classroom' ), $args );
 

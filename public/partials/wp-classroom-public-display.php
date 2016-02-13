@@ -17,7 +17,7 @@
   <article <?php post_class(); ?>>
     <header>
       <h1 class="entry-title"><?php the_title(); ?></h1>
-      <?php get_template_part('templates/entry-meta'); ?>
+      <div class="meta"><?php echo get_the_term_list( $post->ID, 'wp_course', 'Course: ', ', ' ); ?></div>
     </header>
     <?php
       $video = get_post_meta(get_the_ID(), 'class_media_video', TRUE);
