@@ -30,7 +30,8 @@ class WP_Classroom_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-
+		//TODO: Doesn't seem to be working
+		flush_rewrite_rules();
 	}
 
 }

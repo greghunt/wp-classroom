@@ -30,7 +30,8 @@ class WP_Classroom_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-
+		//TODO: Doesn't seem to be working
+		flush_rewrite_rules();
 	}
 
 }
