@@ -32,7 +32,13 @@
       <?php the_content(); ?>
     </div>
     <footer>
-      <?= apply_filters('course_list') ?>
+      <?= apply_filters(
+        'course_list',
+        array(
+          'numbered'=>'true',
+          'orderby'=>'menu_order'
+        )
+      ) ?>
     </footer>
     <?php comments_template('/templates/comments.php'); ?>
   </article>

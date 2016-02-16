@@ -142,13 +142,20 @@ class WP_Classroom_Public {
 	 * @return	str	$html		Output the HTML
 	 */
 	public function course_list_shortcode( $atts ) {
-		$defaults['orderby'] 		= 'date';
+		$defaults = array(
+			'orderby' => 'date',
+			'numbered' => 'false',
+		);
+
 		$args			= shortcode_atts( $defaults, $atts, 'course_list' );
 		$classes 		= $this->get_course_class_list( $args );
 
-		$html = '<ol>';
+		$html = '<ol class="'.$this->prefix.'-course-list">';
 		foreach( $classes->posts as $class ) {
 			$html .= '<li><a href="'. get_permalink($class) .'">';
+			if( $args['numbered'] == "true" ) {
+				$html .= '<span class="'.$this->prefix.'-cl__order">'.$class->menu_order.'</span> ';
+			}
 			$html .= $class->post_title;
 			$html .= '</a></li>';
 		}
@@ -211,7 +218,7 @@ class WP_Classroom_Public {
 	//Template for Single Course
 	public function get_wp_classroom_template($single_template) {
      global $post;
-		 
+
      if ($post->post_type == 'wp_classroom') {
         $single_template = dirname( __FILE__ ) . '/partials/wp-classroom-public-display.php';
      }
