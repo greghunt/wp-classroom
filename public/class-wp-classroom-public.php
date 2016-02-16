@@ -41,6 +41,15 @@ class WP_Classroom_Public {
 	private $version;
 
 	/**
+	 * CSS Class Prefix
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 * @var      string    $version    The current version of the plugin.
+	 */
+	public $prefix = 'wpclr';
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -60,7 +69,7 @@ class WP_Classroom_Public {
 	 * @since    1.0.0
 	 */
 	 public function getOption($option_name) {
-		 $option = get_option('wp-classroom');
+		 $option = get_option($this->WP_Classroom);
 		 return $option[$option_name];
 	 }
 
@@ -119,6 +128,7 @@ class WP_Classroom_Public {
 	public function register_shortcodes() {
 		add_shortcode( 'course_list', array( $this, 'course_list_shortcode' ) );
 		add_shortcode( 'courses', array( $this, 'courses_shortcode' ) );
+		add_shortcode( 'student_profile', array( $this, 'student_profile_shortcode' ) );
 	} // register_shortcodes()
 
 
@@ -148,6 +158,28 @@ class WP_Classroom_Public {
 	} // shortcode()
 
 	/**
+	 * Processes student_profile shortcode
+	 *
+	 * @param   array	$atts		The attributes from the shortcode
+	 *
+	 * @return	str	$html		Output the HTML
+	 */
+	public function student_profile_shortcode( $atts ) {
+		$defaults['orderby'] 		= 'date';
+		$args			= shortcode_atts( $defaults, $atts, 'student_profile' );
+
+		$student = wp_get_current_user();
+
+		//print_r($student);
+		$html = '<figure class="'.$this->prefix.'-student-profile">';
+		$html .= get_avatar($student->ID, 300);
+		$html .= '<figcaption>'.$student->user_nicename.'</figcaption>';
+		$html .= '</figure>';
+
+		return $html;
+	} // shortcode()
+
+	/**
 	 * Processes courses shortcode
 	 *
 	 * @param   array	$atts		The attributes from the shortcode
@@ -157,18 +189,18 @@ class WP_Classroom_Public {
 	 */
 	public function courses_shortcode( $atts ) {
 		$defaults['orderby']	= 'date';
-		$args			= shortcode_atts( $defaults, $atts, 'course_list' );
+		$args			= shortcode_atts( $defaults, $atts, 'courses' );
 		$courses 	= get_terms( 'wp_course' );
 
-		$html = '<ul class="wpclr-courses">';
+		$html = '<ul class="'.$this->prefix.'-courses">';
 		foreach( $courses as $course ) {
 			$term_meta = get_term_meta($course->term_id);
-			$html .= '<li class="wpclr-course"><a href="'. get_term_link($course) .'">';
+			$html .= '<li class="'.$this->prefix.'-course"><a href="'. get_term_link($course) .'">';
 			if( $term_meta['image'] ) {
 				$term_image = wp_get_attachment_image($term_meta['image'][0], 'medium');
-				$html .= '<span class="wpclr-course__img">' . $term_image . '</span>';
+				$html .= '<span class="'.$this->prefix.'-course__img">' . $term_image . '</span>';
 			}
-			$html .= '<h2 class="wpclr-course__title">' . $course->name . '</h2>';
+			$html .= '<h2 class="'.$this->prefix.'-course__title">' . $course->name . '</h2>';
 			$html .= '</a></li>';
 		}
 		$html .= '</ul>';
@@ -179,7 +211,7 @@ class WP_Classroom_Public {
 	//Template for Single Course
 	public function get_wp_classroom_template($single_template) {
      global $post;
-
+		 
      if ($post->post_type == 'wp_classroom') {
         $single_template = dirname( __FILE__ ) . '/partials/wp-classroom-public-display.php';
      }

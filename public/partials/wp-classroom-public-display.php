@@ -17,6 +17,9 @@
   <article <?php post_class(); ?>>
     <header>
       <h1 class="entry-title"><?php the_title(); ?></h1>
+      <?php if($next = get_next_post()): ?>
+      <a href="<?php echo get_permalink($next->ID) ?>"><?php _e('Skip Class', 'wp-classroom') ?></a>
+      <?php endif; ?>
       <div class="meta"><?php echo get_the_term_list( $post->ID, 'wp_course', 'Course: ', ', ' ); ?></div>
     </header>
     <div class="class-multimedia">

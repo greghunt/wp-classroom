@@ -2,3 +2,19 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
+
+.wpclr-courses {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+  .wpclr-course {
+    display: inline-block;
+    vertical-align: top;
+    padding: 1em;
+    border: 1px solid #ccc;
+  }
+
+.wpclr-student-profile {
+  
+}

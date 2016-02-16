@@ -79,3 +79,4 @@ function run_WP_Classroom() {
 
 }
 run_WP_Classroom();
+//Execute shortcodes in widgets

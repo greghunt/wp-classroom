@@ -56,6 +56,7 @@ class WP_Classroom {
 	 */
 	protected $version;
 
+
 	/**
 	 * Define the core functionality of the plugin.
 	 *
@@ -155,7 +156,6 @@ class WP_Classroom {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new WP_Classroom_Admin( $this->get_WP_Classroom(), $this->get_version() );
-
 		$this->loader->add_action( 'init', $plugin_admin, 'wp_classroom_post_type' );
 		$this->loader->add_action( 'init', $plugin_admin, 'wp_classroom_taxonomy' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
@@ -192,6 +192,15 @@ class WP_Classroom {
 		 */
 		$this->loader->add_action( 'course_list', $plugin_public, 'course_list_shortcode' );
 		$this->loader->add_action( 'courses', $plugin_public, 'courses_shortcode' );
+		$this->loader->add_action( 'student_profile', $plugin_public, 'student_profile_shortcode' );
+
+		/**
+		* Execute shortcodes in widgets
+		*
+		*/
+		add_filter('widget_text', 'do_shortcode');
+
+
 
 }
 
