@@ -55,6 +55,16 @@ class WP_Classroom_Public {
 	}
 
 	/**
+	 * Method for getting plugin options
+	 *
+	 * @since    1.0.0
+	 */
+	 public function getOption($option_name) {
+		 $option = get_option('wp-classroom');
+		 return $option[$option_name];
+	 }
+
+	/**
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
 	 * @since    1.0.0
@@ -72,8 +82,9 @@ class WP_Classroom_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
-		wp_enqueue_style( $this->WP_Classroom, plugin_dir_url( __FILE__ ) . 'css/wp-classroom-public.css', array(), $this->version, 'all' );
+		if( $this->getOption('frontend-styles') == 1 ) {
+			wp_enqueue_style( $this->WP_Classroom, plugin_dir_url( __FILE__ ) . 'css/wp-classroom-public.css', array(), $this->version, 'all' );
+		}
 
 	}
 

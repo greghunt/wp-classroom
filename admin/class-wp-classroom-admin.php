@@ -213,4 +213,98 @@ class WP_Classroom_Admin {
 
 	 }
 
+	 /**
+ 	 * Adds a settings page link to a menu
+ 	 *
+ 	 * @since 		1.0.0
+ 	 * @return 		void
+ 	 */
+ 	public function add_menu() {
+		// add_submenu_page ( string $parent_slug, string $page_title, string $menu_title, string $capability, string $menu_slug, callable $function = '' )
+		add_submenu_page(
+			'edit.php?post_type=wp_classroom',
+			__('Classroom Settings', 'wp-classroom'),
+			__('Settings', 'wp-classroom'),
+			'edit_posts',
+			$this->plugin_name,
+			array( $this, 'options_page' )
+		);
+
+ 	} // add_menu()
+
+ 	/**
+ 	 * Creates the options page
+ 	 *
+ 	 * @since 		1.0.0
+ 	 * @return 		void
+ 	 */
+ 	public function options_page() {
+ 		?><h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+ 		<form method="post" action="options.php"><?php
+ 		settings_fields( 'wp-classroom' );
+ 		do_settings_sections( 'wp-classroom' );
+ 		submit_button( 'Save Settings' );
+ 		?></form><?php
+ 	} // options_page()
+
+ 	/**
+ 	 * Registers plugin settings, sections, and fields
+ 	 *
+ 	 * @since 		1.0.0
+ 	 * @return 		void
+ 	 */
+ 	public function register_settings() {
+ 		// register_setting( $option_group, $option_name, $sanitize_callback );
+ 		register_setting(
+ 			'wp-classroom',
+ 			'wp-classroom'
+ 		);
+ 		// add_settings_section( $id, $title, $callback, $menu_slug );
+ 		add_settings_section(
+ 			'wp-classroom-display-options',
+ 			apply_filters( 'wp-classroom-display-section-title', __( 'Front End', 'wp-classroom' ) ),
+ 			NULL, //array( $this, 'display_options_section' ),
+ 			'wp-classroom'
+ 		);
+
+ 		// add_settings_field( $id, $title, $callback, $menu_slug, $section, $args );
+ 		add_settings_field(
+ 			'frontend-styles',
+ 			apply_filters( 'wp-classroom-frontend-styles-label', __( 'Use Frontend Styles', 'wp-classroom' ) ),
+ 			array( $this, 'frontend_styles_field' ),
+ 			'wp-classroom',
+ 			'wp-classroom-display-options'
+ 		);
+
+ 	} // register_settings()
+
+ 	/**
+ 	 * Creates a settings section
+ 	 *
+ 	 * @since 		1.0.0
+ 	 * @param 		array 		$params 		Array of parameters for the section
+ 	 * @return 		mixed 						The settings section
+ 	 */
+ 	public function display_options_section( $params ) {
+ 		echo '<p>' . $params['title'] . '</p>';
+ 	} // display_options_section()
+
+ 	/**
+ 	 * Creates a settings field
+ 	 *
+ 	 * @since 		1.0.0
+ 	 * @return 		mixed 			The settings field
+ 	 */
+ 	public function frontend_styles_field() {
+ 		$options 	= get_option( 'wp-classroom' );
+ 		$option 	= 0;
+ 		if ( ! empty( $options['frontend-styles'] ) ) {
+ 			$option = $options['frontend-styles'];
+ 		}
+ 		?>
+		<input type="checkbox" id="wp-classroom[frontend-styles]" name="wp-classroom[frontend-styles]" value="1" <?php checked( 1, $option ); ?> />
+		<?php
+ 	} // display_options_field()
+
+
 }
