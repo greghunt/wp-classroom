@@ -152,7 +152,11 @@ class WP_Classroom_Public {
 
 		$html = '<ol class="'.$this->prefix.'-course-list">';
 		foreach( $classes->posts as $class ) {
-			$html .= '<li><a href="'. get_permalink($class) .'">';
+			$html .= '<li class="'.$this->prefix.'-cl-item';
+			if( get_the_ID() == $class->ID ) {
+				$html .= ' '. $this->prefix.'-cl-item--current';
+			}
+			$html .= '"><a href="'. get_permalink($class) .'">';
 			if( $args['numbered'] == "true" ) {
 				$html .= '<span class="'.$this->prefix.'-cl__order">'.$class->menu_order.'</span> ';
 			}
