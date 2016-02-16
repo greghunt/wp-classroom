@@ -188,6 +188,7 @@ class WP_Classroom {
 		 * @link 	http://nacin.com/2010/05/18/rethinking-template-tags-in-plugins/
 		 */
 		$this->loader->add_action( 'course_list', $plugin_public, 'course_list_shortcode' );
+		$this->loader->add_action( 'courses', $plugin_public, 'courses_shortcode' );
 
 }
 

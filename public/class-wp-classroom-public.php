@@ -107,11 +107,12 @@ class WP_Classroom_Public {
 	 */
 	public function register_shortcodes() {
 		add_shortcode( 'course_list', array( $this, 'course_list_shortcode' ) );
+		add_shortcode( 'courses', array( $this, 'courses_shortcode' ) );
 	} // register_shortcodes()
 
 
 	/**
-	 * Processes shortcode
+	 * Processes course_list shortcode
 	 *
 	 * @param   array	$atts		The attributes from the shortcode
 	 *
@@ -135,7 +136,31 @@ class WP_Classroom_Public {
 		return $html;
 	} // shortcode()
 
+	/**
+	 * Processes courses shortcode
+	 *
+	 * @param   array	$atts		The attributes from the shortcode
+	 *
+	 *
+	 * @return	str	$html		Output the HTML
+	 */
+	public function courses_shortcode( $atts ) {
+		$defaults['orderby']	= 'date';
+		$args			= shortcode_atts( $defaults, $atts, 'course_list' );
+		$courses 	= get_terms( 'wp_course' );
 
+		$html = '<ul>';
+		foreach( $courses as $course ) {
+			$html .= '<li><a href="'. get_term_link($course) .'">';
+			$html .= $course->name;
+			$html .= '</a></li>';
+		}
+		$html .= '</ul>';
+
+		return $html;
+	} // shortcode()
+
+	//Template for Single Course
 	public function get_wp_classroom_template($single_template) {
      global $post;
 

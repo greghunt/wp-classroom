@@ -212,4 +212,5 @@ class WP_Classroom_Admin {
 	 	register_taxonomy( 'wp_course', array( 'wp_classroom' ), $args );
 
 	 }
+
 }
