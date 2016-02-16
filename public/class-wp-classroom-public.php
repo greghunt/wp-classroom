@@ -149,10 +149,15 @@ class WP_Classroom_Public {
 		$args			= shortcode_atts( $defaults, $atts, 'course_list' );
 		$courses 	= get_terms( 'wp_course' );
 
-		$html = '<ul>';
+		$html = '<ul class="wpclr-courses">';
 		foreach( $courses as $course ) {
-			$html .= '<li><a href="'. get_term_link($course) .'">';
-			$html .= $course->name;
+			$term_meta = get_term_meta($course->term_id);
+			$html .= '<li class="wpclr-course"><a href="'. get_term_link($course) .'">';
+			if( $term_meta['image'] ) {
+				$term_image = wp_get_attachment_image($term_meta['image'][0], 'medium');
+				$html .= '<span class="wpclr-course__img">' . $term_image . '</span>';
+			}
+			$html .= '<h2 class="wpclr-course__title">' . $course->name . '</h2>';
 			$html .= '</a></li>';
 		}
 		$html .= '</ul>';

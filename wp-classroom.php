@@ -57,6 +57,13 @@ register_deactivation_hook( __FILE__, 'deactivate_WP_Classroom' );
 require plugin_dir_path( __FILE__ ) . 'includes/class-wp-classroom.php';
 
 /**
+ * Require third party plugins
+ *
+ * @link {https://wordpress.org/plugins/wp-term-images/}
+ */
+require plugin_dir_path( __FILE__ ) . 'vendor/wp-term-images/wp-term-images.php';
+
+/**
  * Begins execution of the plugin.
  *
  * Since everything within the plugin is registered via hooks,
