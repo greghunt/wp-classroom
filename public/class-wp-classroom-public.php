@@ -73,6 +73,17 @@ class WP_Classroom_Public {
 		 return $option[$option_name];
 	 }
 
+	 /**
+ 	 * Method for loading public templates
+ 	 *
+ 	 * @since    1.0.0
+ 	 */
+	public function get_template_part( $slug, $name = null, $load = true ) {
+	   $wp_classroom_template_loader = new WP_Classroom_Template_Loader;
+	   $wp_classroom_template_loader->get_template_part( $slug, $name, $load );
+	}
+
+
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
@@ -219,14 +230,10 @@ class WP_Classroom_Public {
 		return $html;
 	} // shortcode()
 
-	//Template for Single Course
-	public function get_wp_classroom_template($single_template) {
-     global $post;
 
-     if ($post->post_type == 'wp_classroom') {
-        $single_template = dirname( __FILE__ ) . '/partials/wp-classroom-public-display.php';
-     }
-     return $single_template;
+	//Template for Single Course
+	public function get_wp_classroom_template($content) {
+    return $this->get_template_part( 'single' );
 	}
 
 

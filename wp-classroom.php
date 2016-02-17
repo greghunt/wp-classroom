@@ -29,6 +29,8 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+define( 'WP_Classroom_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-wp-classroom-activator.php

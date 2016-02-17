@@ -119,6 +119,11 @@ class WP_Classroom {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-classroom-metabox.php';
 
 		/**
+		 * The class responsible for loading template views
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-template-loader.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
