@@ -41,6 +41,15 @@ class WP_Classroom_Admin {
 	private $version;
 
 	/**
+	 * Plugin Name
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $version    The current version of this plugin.
+	 */
+	private $plugin_name;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -50,6 +59,7 @@ class WP_Classroom_Admin {
 	public function __construct( $WP_Classroom, $version ) {
 
 		$this->WP_Classroom = $WP_Classroom;
+		$this->plugin_name = $WP_Classroom;
 		$this->version = $version;
 
 	}
@@ -223,8 +233,8 @@ class WP_Classroom_Admin {
 		// add_submenu_page ( string $parent_slug, string $page_title, string $menu_title, string $capability, string $menu_slug, callable $function = '' )
 		add_submenu_page(
 			'edit.php?post_type=wp_classroom',
-			__('Classroom Settings', 'wp-classroom'),
-			__('Settings', 'wp-classroom'),
+			__('Classroom Settings', $this->plugin_name),
+			__('Settings', $this->plugin_name),
 			'edit_posts',
 			$this->plugin_name,
 			array( $this, 'options_page' )
@@ -241,8 +251,8 @@ class WP_Classroom_Admin {
  	public function options_page() {
  		?><h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
  		<form method="post" action="options.php"><?php
- 		settings_fields( 'wp-classroom' );
- 		do_settings_sections( 'wp-classroom' );
+ 		settings_fields( $this->plugin_name );
+ 		do_settings_sections( $this->plugin_name );
  		submit_button( 'Save Settings' );
  		?></form><?php
  	} // options_page()
@@ -256,24 +266,24 @@ class WP_Classroom_Admin {
  	public function register_settings() {
  		// register_setting( $option_group, $option_name, $sanitize_callback );
  		register_setting(
- 			'wp-classroom',
- 			'wp-classroom'
+ 			$this->plugin_name,
+ 			$this->plugin_name
  		);
  		// add_settings_section( $id, $title, $callback, $menu_slug );
  		add_settings_section(
- 			'wp-classroom-display-options',
- 			apply_filters( 'wp-classroom-display-section-title', __( 'Front End', 'wp-classroom' ) ),
+ 			$this->plugin_name . '-display-options',
+ 			apply_filters( $this->plugin_name . '-display-section-title', __( 'Front End', $this->plugin_name ) ),
  			NULL, //array( $this, 'display_options_section' ),
- 			'wp-classroom'
+ 			$this->plugin_name
  		);
 
  		// add_settings_field( $id, $title, $callback, $menu_slug, $section, $args );
  		add_settings_field(
  			'frontend-styles',
- 			apply_filters( 'wp-classroom-frontend-styles-label', __( 'Use Frontend Styles', 'wp-classroom' ) ),
+ 			apply_filters( $this->plugin_name . '-frontend-styles-label', __( 'Use Frontend Styles', $this->plugin_name ) ),
  			array( $this, 'frontend_styles_field' ),
- 			'wp-classroom',
- 			'wp-classroom-display-options'
+ 			$this->plugin_name,
+ 			$this->plugin_name . '-display-options'
  		);
 
  	} // register_settings()
@@ -296,13 +306,13 @@ class WP_Classroom_Admin {
  	 * @return 		mixed 			The settings field
  	 */
  	public function frontend_styles_field() {
- 		$options 	= get_option( 'wp-classroom' );
+ 		$options 	= get_option( $this->plugin_name );
  		$option 	= 0;
  		if ( ! empty( $options['frontend-styles'] ) ) {
  			$option = $options['frontend-styles'];
  		}
  		?>
-		<input type="checkbox" id="wp-classroom[frontend-styles]" name="wp-classroom[frontend-styles]" value="1" <?php checked( 1, $option ); ?> />
+		<input type="checkbox" id="<?php echo $this->plugin_name ?>[frontend-styles]" name="<?php echo $this->plugin_name ?>[frontend-styles]" value="1" <?php checked( 1, $option ); ?> />
 		<?php
  	} // display_options_field()
 
