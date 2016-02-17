@@ -78,9 +78,21 @@ class WP_Classroom_Public {
  	 *
  	 * @since    1.0.0
  	 */
-	public function get_template_part( $slug, $name = null, $load = true ) {
+	public function get_template_path( $slug, $name = NULL, $load = FALSE ) {
 	   $wp_classroom_template_loader = new WP_Classroom_Template_Loader;
-	   $wp_classroom_template_loader->get_template_part( $slug, $name, $load );
+	   return $wp_classroom_template_loader->get_template_part( $slug, $name, $load );
+	}
+
+	//Template for Single Course
+	public function get_wp_classroom_template($single_template) {
+		global $post;
+
+		if ($post->post_type == 'wp_classroom') {
+			$single_template = $this->get_template_path( 'single' );
+		}
+
+		return $single_template;
+
 	}
 
 
@@ -229,12 +241,6 @@ class WP_Classroom_Public {
 
 		return $html;
 	} // shortcode()
-
-
-	//Template for Single Course
-	public function get_wp_classroom_template($content) {
-    return $this->get_template_part( 'single' );
-	}
 
 
 	public function get_course_class_list( array $args ) {
