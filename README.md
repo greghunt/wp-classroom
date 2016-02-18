@@ -1,11 +1,11 @@
 #Wordpress Classroom
-Contributors: freshbrewedweb
-Tags: comments, spam
-Requires at least: 4.4.2
-Tested up to: 1.0
-Stable tag: 1.0
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+- Contributors: freshbrewedweb
+- Tags: comments, spam
+- Requires at least: 4.4.2
+- Tested up to: 1.0
+- Stable tag: 1.0
+- License: GPLv2 or later
+- License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 This WordPress plugin adds a video-centric classroom organized into courses.
 
