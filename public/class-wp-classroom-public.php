@@ -88,6 +88,7 @@ class WP_Classroom_Public {
 		global $post;
 
 		if ($post->post_type == 'wp_classroom') {
+			add_filter('the_content', 'do_shortcode');
 			$single_template = $this->get_template_path( 'single' );
 		}
 
@@ -230,7 +231,7 @@ class WP_Classroom_Public {
 		foreach( $courses as $course ) {
 			$term_meta = get_term_meta($course->term_id);
 			$html .= '<li class="'.$this->prefix.'-course"><a href="'. get_term_link($course) .'">';
-			if( $term_meta['image'] ) {
+			if( isset($term_meta['image'][0]) ) {
 				$term_image = wp_get_attachment_image($term_meta['image'][0], 'medium');
 				$html .= '<span class="'.$this->prefix.'-course__img">' . $term_image . '</span>';
 			}
