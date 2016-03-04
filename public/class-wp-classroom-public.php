@@ -69,8 +69,10 @@ class WP_Classroom_Public {
 	 * @since    1.0.0
 	 */
 	 public function getOption($option_name) {
-		 $option = get_option($this->WP_Classroom);
-		 return $option[$option_name];
+		 if( $option )
+ 			 return $option[$option_name];
+ 		else
+ 			return FALSE;
 	 }
 
 	 /**
