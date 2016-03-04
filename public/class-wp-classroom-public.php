@@ -222,7 +222,7 @@ class WP_Classroom_Public {
 	 *
 	 * @return	str	$html		Output the HTML
 	 */
-	public function courses_shortcode( $atts ) {
+	public function courses_shortcode( $atts = [] ) {
 		$defaults['orderby']	= 'date';
 		$args			= shortcode_atts( $defaults, $atts, 'courses' );
 		$courses 	= get_terms( 'wp_course' );
