@@ -178,13 +178,14 @@ class WP_Classroom_Public {
 
 		$html = '<ol class="'.$this->prefix.'-course-list">';
 		foreach( $classes->posts as $class ) {
+			$order_num = $class->menu_order + 1;
 			$html .= '<li class="'.$this->prefix.'-cl-item';
 			if( get_the_ID() == $class->ID ) {
 				$html .= ' '. $this->prefix.'-cl-item--current';
 			}
 			$html .= '"><a href="'. get_permalink($class) .'">';
 			if( $args['numbered'] == "true" ) {
-				$html .= '<span class="'.$this->prefix.'-cl__order">'.$class->menu_order.'</span> ';
+				$html .= '<span class="'.$this->prefix.'-cl__order">'.$order_num.'</span> ';
 			}
 			$html .= $class->post_title;
 			$html .= '</a></li>';
