@@ -155,7 +155,7 @@ class WP_Classroom_Admin {
 			'description'           => __( 'Classroom', 'wp-classroom' ),
 			'labels'                => $labels,
 			'supports'              => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'custom-fields', 'page-attributes', ),
-			'hierarchical'          => false,
+			'hierarchical'          => true,
 			'public'                => true,
 			'show_ui'               => true,
 			'show_in_menu'          => true,
@@ -316,5 +316,34 @@ class WP_Classroom_Admin {
 		<?php
  	} // display_options_field()
 
+	/**
+	 * Registers the Classroom Metabox
+	 * @uses CMB2
+	 * @return [type] [description]
+	 */
+	function classroom_register_metabox() {
+
+		$prefix = 'wp_classroom_';
+
+		/**
+		 * Metabox to be displayed on a single page ID
+		 */
+		$cmb_classroom = new_cmb2_box( array(
+			'id'           => $prefix . 'options',
+			'title'        => __( 'Classroom Options', 'wp_classroom' ),
+			'object_types' => array( 'wp_classroom', ), // Post type
+			'context'      => 'normal',
+			'priority'     => 'high',
+			'show_names'   => true, // Show field names on the left
+		) );
+
+		$cmb_classroom->add_field( array(
+			'name' => __( 'Video', 'wp_classroom' ),
+			'desc' => __( 'The main class video.', 'wp_classroom' ),
+			'id'   => $prefix . 'video',
+			'type' => 'oembed',
+		) );
+
+	}
 
 }
