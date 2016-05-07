@@ -23,7 +23,6 @@
  * Text Domain:       wp-classroom
  * Domain Path:       /languages
  * GitHub Plugin URI: freshbrewedweb/wp-classroom
- * GitHub Plugin URI: https://github.com/freshbrewedweb/wp-classroom
  */
 
 // If this file is called directly, abort.
