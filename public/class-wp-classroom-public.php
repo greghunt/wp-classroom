@@ -185,10 +185,16 @@ class WP_Classroom_Public {
 			'course' => NULL,
 			'class' => $this->prefix.'-course-list',
 			'count_class' => $this->prefix.'-course-list__num',
+			'reveal' => FALSE,
 		);
 
 		$args		= shortcode_atts( $defaults, $atts, 'course_list' );
-		$classes 	= $this->get_course_class_list( $args, get_term_by('slug', $args['course'], 'wp_course') );
+
+		if( strtolower($args['reveal']) == 'true' ) {
+			$args['reveal'] = TRUE;
+		}
+
+		$classes 	= $this->get_course_class_list( $args, get_term_by('slug', $args['course'], 'wp_course'), $args['reveal'] );
 
 		if( is_string($classes) ) {
 			return $classes;
@@ -303,7 +309,7 @@ class WP_Classroom_Public {
 		$defaults['thumbnail'] = "true";
 		$args		= shortcode_atts( $defaults, $atts, 'courses' );
 		$courses 	= get_terms( 'wp_course', array('hide_empty' => 0) );
-		
+
 		if( $args['active'] ) {
 			$current_course = get_term_by('slug', $args['active'], 'wp_course');
 		} else {
@@ -317,7 +323,7 @@ class WP_Classroom_Public {
 				}
 			}
 		}
-			
+
 		$html = '<ul class="'. $args['class'] .'">';
 		foreach( $courses as $course ) {
 			$term_meta = get_term_meta($course->term_id);
@@ -345,7 +351,7 @@ class WP_Classroom_Public {
 	} // shortcode()
 
 
-	public function get_course_class_list( array $args, $course = NULL ) {
+	public function get_course_class_list( array $args, $course = NULL, $reveal = FALSE ) {
 		global $post;
 		$return = '';
 
@@ -372,6 +378,10 @@ class WP_Classroom_Public {
 			'orderby' => 'date',
 			'order' => 'ASC',
 		);
+		if( $reveal ) {
+			$default_args['suppress_filters'] = TRUE;
+		}
+		
 		//Combine defaults with passed args
 		$args = array_merge($default_args, $args);
 
@@ -486,15 +496,15 @@ class WP_Classroom_Public {
 		return $html;
 
 	}
-	
-		
+
+
 	/**
 	 * Customize Adjacent Post Link Order
 	 */
 	public function order_adjacent_post_where($sql) {
 	  if ( !is_main_query() || !is_singular() )
 	    return $sql;
-	
+
 	  $the_post = get_post( get_the_ID() );
 	  $patterns = array();
 	  $patterns[] = '/post_date/';
@@ -504,7 +514,7 @@ class WP_Classroom_Public {
 	  $replacements[] = $the_post->menu_order;
 	  return preg_replace( $patterns, $replacements, $sql );
 	}
-	
+
 	public function adjacent_post_sort($sql) {
 	  if ( get_post_type() == "wp_classroom" ) {
 		$pattern = '/post_date/';
@@ -513,7 +523,7 @@ class WP_Classroom_Public {
 	  }
 
 	  return $sql;
-	
+
 	}
 
 }
