@@ -377,11 +377,12 @@ class WP_Classroom_Public {
 			),
 			'orderby' => 'date',
 			'order' => 'ASC',
+			'posts_per_page' => 100,
 		);
 		if( $reveal ) {
 			$default_args['suppress_filters'] = TRUE;
 		}
-		
+
 		//Combine defaults with passed args
 		$args = array_merge($default_args, $args);
 
