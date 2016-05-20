@@ -346,4 +346,36 @@ class WP_Classroom_Admin {
 
 	}
 
+	/**
+	* add order column to admin listing screen for classes
+	*/
+	function add_new_classes_column($columns) {
+		$new_item['menu_order'] = "Order";
+		return array_slice($columns, 0, 1, true) + $new_item + array_slice($columns, 1, count($columns) - 1, true) ;
+	}
+
+	/**
+	* show custom order column values
+	*/
+	function show_order_column($name){
+	  global $post;
+
+	  switch ($name) {
+	    case 'menu_order':
+	      $order = $post->menu_order;
+	      echo $order;
+	      break;
+	   default:
+	      break;
+	   }
+	}
+
+	/**
+	* make column sortable
+	*/
+	function order_column_register_sortable($columns){
+	  $columns['menu_order'] = 'menu_order';
+	  return $columns;
+	}
+
 }

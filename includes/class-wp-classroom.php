@@ -166,6 +166,12 @@ class WP_Classroom {
 		$this->loader->add_action( 'admin_menu', 				$plugin_admin, 	'add_menu' );
 		$this->loader->add_action( 'admin_init', 				$plugin_admin, 	'register_settings' );
 
+		//Add order to classroom table
+		$this->loader->add_action( 'manage_edit-wp_classroom_columns', $plugin_admin, 	'add_new_classes_column' );
+		$this->loader->add_action( 'manage_wp_classroom_posts_custom_column', $plugin_admin, 	'show_order_column' );
+		$this->loader->add_filter( 'manage_edit-wp_classroom_sortable_columns', $plugin_admin, 	'order_column_register_sortable' );
+
+
 	}
 
 	/**
@@ -210,7 +216,7 @@ class WP_Classroom {
 		*
 		*/
 		add_filter('widget_text', 'do_shortcode');
-		
+
 		//Override Groups Restrict Categories function that hides terms
 		add_filter( 'list_terms_exclusions', '__return_false', 99, 3 );
 
