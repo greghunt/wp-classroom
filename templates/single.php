@@ -38,7 +38,7 @@
   </div>
   <nav class="class-course-nav">
     <?= apply_filters(
-      'courses'
+      'courses', NULL
     ) ?>
   </nav>
   <div class="entry-content">
