@@ -269,6 +269,7 @@ class WP_Classroom_Admin {
  			$this->plugin_name,
  			$this->plugin_name
  		);
+
  		// add_settings_section( $id, $title, $callback, $menu_slug );
  		add_settings_section(
  			$this->plugin_name . '-display-options',
@@ -282,6 +283,16 @@ class WP_Classroom_Admin {
  			'frontend-styles',
  			apply_filters( $this->plugin_name . '-frontend-styles-label', __( 'Use Frontend Styles', $this->plugin_name ) ),
  			array( $this, 'frontend_styles_field' ),
+ 			$this->plugin_name,
+ 			$this->plugin_name . '-display-options'
+ 		);
+
+
+ 		// add_settings_field( $id, $title, $callback, $menu_slug, $section, $args );
+ 		add_settings_field(
+ 			'frontend-class-count',
+ 			apply_filters( $this->plugin_name . '-frontend-class-count-label', __( 'Class Count', $this->plugin_name ) ),
+ 			array( $this, 'class_count_field' ),
  			$this->plugin_name,
  			$this->plugin_name . '-display-options'
  		);
@@ -313,6 +324,24 @@ class WP_Classroom_Admin {
  		}
  		?>
 		<input type="checkbox" id="<?php echo $this->plugin_name ?>[frontend-styles]" name="<?php echo $this->plugin_name ?>[frontend-styles]" value="1" <?php checked( 1, $option ); ?> />
+		<?php
+ 	} // display_options_field()
+
+ 	/**
+ 	 * Creates a settings field
+ 	 *
+ 	 * @since 		1.0.0
+ 	 * @return 		mixed 			The settings field
+ 	 */
+ 	public function class_count_field() {
+ 		$options 	= get_option( $this->plugin_name );
+ 		$option 	= 0;
+ 		if ( ! empty( $options['class-count'] ) ) {
+ 			$option = $options['class-count'];
+ 		}
+ 		?>
+		<input type="radio" id="<?php echo $this->plugin_name ?>[class-count]" name="<?php echo $this->plugin_name ?>[class-count]" value="global" <?php checked( 'global', $option ); ?> /> <?php _e('Global', $this->plugin_name) ?><br>
+		<input type="radio" id="<?php echo $this->plugin_name ?>[class-count]" name="<?php echo $this->plugin_name ?>[class-count]" value="course" <?php checked( 'course', $option ); ?> /> <?php _e('Course', $this->plugin_name) ?>
 		<?php
  	} // display_options_field()
 

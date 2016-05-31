@@ -69,6 +69,7 @@ class WP_Classroom_Public {
 	 * @since    1.0.0
 	 */
 	 public function getOption($option_name) {
+		 $option = get_option('wp-classroom');
 		 if( isset($option[$option_name]) )
  			 return $option[$option_name];
  		else
@@ -200,8 +201,14 @@ class WP_Classroom_Public {
 			return $classes;
 		} else {
 			$html = '<ol class="'.$args['class'].'">';
+			$count = 1;
 			foreach( $classes as $class ) {
-				$order_num = $class->menu_order;
+				if( $this->getOption('class-count') ) {
+					$order_num = $count;	
+				} else {
+					$order_num = $class->menu_order;
+				}
+				
 				$html .= '<li class="'.$this->prefix.'-cl-item';
 				if( $id == $class->ID ) {
 					$html .= ' '. $this->prefix.'-cl-item--current';
@@ -215,6 +222,7 @@ class WP_Classroom_Public {
 				}
 				$html .= $class->post_title;
 				$html .= '</a></li>';
+				$count++;
 			}
 			$html .= '</ol>';
 		}
