@@ -4,17 +4,79 @@
  */
 
 .wpclr-courses {
+	display: inline-block;
   list-style: none;
   padding: 0;
   margin: 0;
+  border: 1px solid #ccc;
 }
   .wpclr-course {
     display: inline-block;
     vertical-align: top;
-    padding: 1em;
-    border: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+  }
+  .wpclr-course a {
+  	display: block;
+  	padding: 1em;
+  }
+  .wpclr-course:last-child {
+  	border: none;
+  }
+  
+  .wpclr-course--active a {
+	  background-color: #ccc;
+	  color: white;
   }
 
 .wpclr-student-profile {
   
 }
+
+.wpclr-course-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	border: 1px solid #ccc;
+
+}	
+	.wpclr-cl-item {
+		border-bottom: 1px solid #ccc;
+	}
+	.wpclr-cl-item:last-child {
+		border-bottom: none;
+	}
+	.wpclr-cl-item:nth-child(2n+1) {
+		background-color: #f7f7f7;
+	}	
+	.wpclr-cl-item a {
+		display: block;
+		padding: 0.5em 1em;
+	}
+	.wpclr-cl-item a:hover {
+		background-color: rgba(0,0,0,0.1);
+	}
+
+	.wpclr-cl-item--current a {
+		color: inherit;
+		background-color: rgba(0,0,0,0.1);		
+	}
+	.wpclr-cl-item--completed .wpclr-course-list__num {
+		background-color: MediumSeaGreen;
+	}
+
+	.wpclr-course-list__num {
+		display: inline-block;
+		vertical-align: middle;
+		font-size: 0.8em;
+		padding: 0.5em;
+		width: 1em;
+		height: 1em;
+		border-radius: 50%;
+		background-color: rgba(0,0,0,0.6);
+		box-sizing: content-box;
+		text-align: center;
+		line-height: 1em;
+		margin-right: 0.5em;
+		color: white;
+	}
+	

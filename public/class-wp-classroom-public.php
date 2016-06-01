@@ -261,10 +261,12 @@ class WP_Classroom_Public {
 	 */
 	public function complete_class_shortcode( $atts ) {
 
+		$completed = FALSE;
 		$defaults['class'] 		= 'wpclr-complete-class';
 		$defaults['button_text'] = __('Complete Class', 'wp_classroom');
 		$defaults['redirect'] = home_url();
-
+		$defaults['course'] = '';
+		
 		$completed_courses = $this->get_user_completed_courses(get_current_user_id());
 
 		if( $courses = wp_get_post_terms(get_the_ID(), 'wp_course') ) {

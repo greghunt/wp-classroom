@@ -51,6 +51,7 @@ class WP_Classroom_Template_Loader extends Gamajo_Template_Loader {
 	 * @since 1.0.0
 	 * @type string
 	 */
+	 
 	protected $plugin_directory = WP_Classroom_PLUGIN_DIR;
 
 	// public function get_template_path( $slug, $name = NULL ) {
