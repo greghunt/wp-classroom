@@ -26,7 +26,7 @@
     <?= apply_filters(
       'complete_class',
       array(
-        'redirect' => $next,
+        'redirect' => get_permalink($next->ID),
       )
     ) ?>
   </header>
@@ -37,9 +37,7 @@
   ?>
   </div>
   <nav class="class-course-nav">
-    <?= apply_filters(
-      'courses', NULL
-    ) ?>
+    <?= apply_filters( 'courses', NULL) ?>
   </nav>
   <div class="entry-content">
     <?php the_content(); ?>
