@@ -20,19 +20,26 @@
 		<article <?php post_class(); ?>>
 		  <header>
 		    <h1 class="entry-title"><?php the_title(); ?></h1>
-		    <?php if($next = get_next_post()): ?>
-		    <a href="<?php echo get_permalink($next->ID) ?>"><?php _e('Skip Class', 'wp-classroom') ?></a>
-		    <?php endif; ?>
-		    <div class="meta"><?php echo get_the_term_list( $post->ID, 'wp_course', 'Course: ', ', ' ); ?></div>
-		
-		    <?= apply_filters(
-		      'complete_class',
-		      array(
-		        'redirect' => get_permalink($next->ID),
-		      )
-		    ) ?>
+		    
+			<div class="wpclr-class__actions">
+			    <?php if($next = get_next_post()): ?>
+			    <a href="<?php echo get_permalink($next->ID) ?>"><?php _e('Skip Class', 'wp-classroom') ?></a>
+			    <?php endif; ?>
+			
+			    <?= apply_filters(
+			      'complete_class',
+			      array(
+			        'redirect' => get_permalink($next->ID),
+			      )
+			    ) ?>
+			</div>
+		    <div class="wpclr-class__meta">
+			    <?php echo get_the_term_list( $post->ID, 'wp_course', 'Course: ', ', ' ); ?>
+			</div>
+			
 		  </header>
-		  <div class="class-multimedia">
+		  
+		  <div class="wpclr-class__multimedia">
 		  <?php
 		    $video = get_post_meta(get_the_ID(), 'wp_classroom_video', TRUE);
 		    echo wp_oembed_get( $video );

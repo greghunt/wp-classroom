@@ -80,3 +80,11 @@
 		color: white;
 	}
 	
+
+.wpclr-class__actions {
+	float: right;
+}
+
+.wpclr-class__multimedia {
+	margin: 2em 0;	
+}
