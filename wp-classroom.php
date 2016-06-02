@@ -66,15 +66,19 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-wp-classroom.php';
  */
 
 //Custom Meta Box 2
-if ( file_exists( plugin_dir_path( __FILE__ ) . 'vendor/CMB2/init.php' ) ) {
-	require_once plugin_dir_path( __FILE__ ) . 'vendor/CMB2/init.php';
+if ( file_exists( WP_Classroom_PLUGIN_DIR . 'vendor/CMB2/init.php' ) ) {
+	require_once WP_Classroom_PLUGIN_DIR . 'vendor/CMB2/init.php';
 }
 
+//Plugin Acvtivator Class
+require_once WP_Classroom_PLUGIN_DIR . 'vendor/TGM-Plugin-Activation/class-tgm-plugin-activation.php';
+
+
 //WP Term Images
-require plugin_dir_path( __FILE__ ) . 'vendor/wp-term-images/wp-term-images.php';
+require WP_Classroom_PLUGIN_DIR . 'vendor/wp-term-images/wp-term-images.php';
 
 //Groups WooCommerce
-define('GROUPS_WS_CORE_DIR', plugin_dir_path( __FILE__ ) . 'vendor/groups-woocommerce' );
+define('GROUPS_WS_CORE_DIR', WP_Classroom_PLUGIN_DIR . 'vendor/groups-woocommerce' );
 require GROUPS_WS_CORE_DIR . '/groups-woocommerce.php';
 
 /**
