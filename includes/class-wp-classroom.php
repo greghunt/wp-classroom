@@ -164,8 +164,9 @@ class WP_Classroom {
 		$this->loader->add_action( 'cmb2_admin_init', $plugin_admin, 'classroom_register_metabox' );
 		$this->loader->add_action( 'tgmpa_register', $plugin_admin, 'wpclr_register_required_plugins' );
 
-		$this->loader->add_action( 'admin_menu', 				$plugin_admin, 	'add_menu' );
-		$this->loader->add_action( 'admin_init', 				$plugin_admin, 	'register_settings' );
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'init' );
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_options_page' );
+		$this->loader->add_action( 'cmb2_admin_init', $plugin_admin, 'add_options_page_metabox' );
 
 		//Add order to classroom table
 		$this->loader->add_action( 'manage_edit-wp_classroom_columns', $plugin_admin, 	'add_new_classes_column' );

@@ -50,6 +50,21 @@ class WP_Classroom_Admin {
 	private $plugin_name;
 
 	/**
+ 	 * Options page metabox id
+ 	 * @var string
+ 	 */
+	private $metabox_id;
+
+	/**
+	 * Key
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $version    The current version of this plugin.
+	 */
+	private $key;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -61,6 +76,8 @@ class WP_Classroom_Admin {
 		$this->WP_Classroom = $WP_Classroom;
 		$this->plugin_name = $WP_Classroom;
 		$this->version = $version;
+		$this->key = $this->plugin_name;
+		$this->metabox_id = $this->key . '_mb';
 
 	}
 
@@ -223,128 +240,6 @@ class WP_Classroom_Admin {
 
 	 }
 
-	 /**
- 	 * Adds a settings page link to a menu
- 	 *
- 	 * @since 		1.0.0
- 	 * @return 		void
- 	 */
- 	public function add_menu() {
-		// add_submenu_page ( string $parent_slug, string $page_title, string $menu_title, string $capability, string $menu_slug, callable $function = '' )
-		add_submenu_page(
-			'edit.php?post_type=wp_classroom',
-			__('Classroom Settings', $this->plugin_name),
-			__('Settings', $this->plugin_name),
-			'edit_posts',
-			$this->plugin_name,
-			array( $this, 'options_page' )
-		);
-
- 	} // add_menu()
-
- 	/**
- 	 * Creates the options page
- 	 *
- 	 * @since 		1.0.0
- 	 * @return 		void
- 	 */
- 	public function options_page() {
- 		?><h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
- 		<form method="post" action="options.php"><?php
- 		settings_fields( $this->plugin_name );
- 		do_settings_sections( $this->plugin_name );
- 		submit_button( 'Save Settings' );
- 		?></form><?php
- 	} // options_page()
-
- 	/**
- 	 * Registers plugin settings, sections, and fields
- 	 *
- 	 * @since 		1.0.0
- 	 * @return 		void
- 	 */
- 	public function register_settings() {
- 		// register_setting( $option_group, $option_name, $sanitize_callback );
- 		register_setting(
- 			$this->plugin_name,
- 			$this->plugin_name
- 		);
-
- 		// add_settings_section( $id, $title, $callback, $menu_slug );
- 		add_settings_section(
- 			$this->plugin_name . '-display-options',
- 			apply_filters( $this->plugin_name . '-display-section-title', __( 'Front End', $this->plugin_name ) ),
- 			NULL, //array( $this, 'display_options_section' ),
- 			$this->plugin_name
- 		);
-
- 		// add_settings_field( $id, $title, $callback, $menu_slug, $section, $args );
- 		add_settings_field(
- 			'frontend-styles',
- 			apply_filters( $this->plugin_name . '-frontend-styles-label', __( 'Use Frontend Styles', $this->plugin_name ) ),
- 			array( $this, 'frontend_styles_field' ),
- 			$this->plugin_name,
- 			$this->plugin_name . '-display-options'
- 		);
-
-
- 		// add_settings_field( $id, $title, $callback, $menu_slug, $section, $args );
- 		add_settings_field(
- 			'frontend-class-count',
- 			apply_filters( $this->plugin_name . '-frontend-class-count-label', __( 'Class Count', $this->plugin_name ) ),
- 			array( $this, 'class_count_field' ),
- 			$this->plugin_name,
- 			$this->plugin_name . '-display-options'
- 		);
-
- 	} // register_settings()
-
- 	/**
- 	 * Creates a settings section
- 	 *
- 	 * @since 		1.0.0
- 	 * @param 		array 		$params 		Array of parameters for the section
- 	 * @return 		mixed 						The settings section
- 	 */
- 	public function display_options_section( $params ) {
- 		echo '<p>' . $params['title'] . '</p>';
- 	} // display_options_section()
-
- 	/**
- 	 * Creates a settings field
- 	 *
- 	 * @since 		1.0.0
- 	 * @return 		mixed 			The settings field
- 	 */
- 	public function frontend_styles_field() {
- 		$options 	= get_option( $this->plugin_name );
- 		$option 	= 0;
- 		if ( ! empty( $options['frontend-styles'] ) ) {
- 			$option = $options['frontend-styles'];
- 		}
- 		?>
-		<input type="checkbox" id="<?php echo $this->plugin_name ?>[frontend-styles]" name="<?php echo $this->plugin_name ?>[frontend-styles]" value="1" <?php checked( 1, $option ); ?> />
-		<?php
- 	} // display_options_field()
-
- 	/**
- 	 * Creates a settings field
- 	 *
- 	 * @since 		1.0.0
- 	 * @return 		mixed 			The settings field
- 	 */
- 	public function class_count_field() {
- 		$options 	= get_option( $this->plugin_name );
- 		$option 	= 0;
- 		if ( ! empty( $options['class-count'] ) ) {
- 			$option = $options['class-count'];
- 		}
- 		?>
-		<input type="radio" id="<?php echo $this->plugin_name ?>[class-count]" name="<?php echo $this->plugin_name ?>[class-count]" value="global" <?php checked( 'global', $option ); ?> /> <?php _e('Global', $this->plugin_name) ?><br>
-		<input type="radio" id="<?php echo $this->plugin_name ?>[class-count]" name="<?php echo $this->plugin_name ?>[class-count]" value="course" <?php checked( 'course', $option ); ?> /> <?php _e('Course', $this->plugin_name) ?>
-		<?php
- 	} // display_options_field()
-
 	/**
 	 * Registers the Classroom Metabox
 	 * @uses CMB2
@@ -485,86 +380,113 @@ class WP_Classroom_Admin {
 			'dismiss_msg'  => '',                      // If 'dismissable' is false, this message will be output at top of nag.
 			'is_automatic' => false,                   // Automatically activate plugins after installation or not.
 			'message'      => '',                      // Message to output right before the plugins table.
-	
-			/*
-			'strings'      => array(
-				'page_title'                      => __( 'Install Required Plugins', 'wp-classroom' ),
-				'menu_title'                      => __( 'Install Plugins', 'wp-classroom' ),
-				/* translators: %s: plugin name. * /
-				'installing'                      => __( 'Installing Plugin: %s', 'wp-classroom' ),
-				/* translators: %s: plugin name. * /
-				'updating'                        => __( 'Updating Plugin: %s', 'wp-classroom' ),
-				'oops'                            => __( 'Something went wrong with the plugin API.', 'wp-classroom' ),
-				'notice_can_install_required'     => _n_noop(
-					/* translators: 1: plugin name(s). * /
-					'This theme requires the following plugin: %1$s.',
-					'This theme requires the following plugins: %1$s.',
-					'wp-classroom'
-				),
-				'notice_can_install_recommended'  => _n_noop(
-					/* translators: 1: plugin name(s). * /
-					'This theme recommends the following plugin: %1$s.',
-					'This theme recommends the following plugins: %1$s.',
-					'wp-classroom'
-				),
-				'notice_ask_to_update'            => _n_noop(
-					/* translators: 1: plugin name(s). * /
-					'The following plugin needs to be updated to its latest version to ensure maximum compatibility with this theme: %1$s.',
-					'The following plugins need to be updated to their latest version to ensure maximum compatibility with this theme: %1$s.',
-					'wp-classroom'
-				),
-				'notice_ask_to_update_maybe'      => _n_noop(
-					/* translators: 1: plugin name(s). * /
-					'There is an update available for: %1$s.',
-					'There are updates available for the following plugins: %1$s.',
-					'wp-classroom'
-				),
-				'notice_can_activate_required'    => _n_noop(
-					/* translators: 1: plugin name(s). * /
-					'The following required plugin is currently inactive: %1$s.',
-					'The following required plugins are currently inactive: %1$s.',
-					'wp-classroom'
-				),
-				'notice_can_activate_recommended' => _n_noop(
-					/* translators: 1: plugin name(s). * /
-					'The following recommended plugin is currently inactive: %1$s.',
-					'The following recommended plugins are currently inactive: %1$s.',
-					'wp-classroom'
-				),
-				'install_link'                    => _n_noop(
-					'Begin installing plugin',
-					'Begin installing plugins',
-					'wp-classroom'
-				),
-				'update_link' 					  => _n_noop(
-					'Begin updating plugin',
-					'Begin updating plugins',
-					'wp-classroom'
-				),
-				'activate_link'                   => _n_noop(
-					'Begin activating plugin',
-					'Begin activating plugins',
-					'wp-classroom'
-				),
-				'return'                          => __( 'Return to Required Plugins Installer', 'wp-classroom' ),
-				'plugin_activated'                => __( 'Plugin activated successfully.', 'wp-classroom' ),
-				'activated_successfully'          => __( 'The following plugin was activated successfully:', 'wp-classroom' ),
-				/* translators: 1: plugin name. * /
-				'plugin_already_active'           => __( 'No action taken. Plugin %1$s was already active.', 'wp-classroom' ),
-				/* translators: 1: plugin name. * /
-				'plugin_needs_higher_version'     => __( 'Plugin not activated. A higher version of %s is needed for this theme. Please update the plugin.', 'wp-classroom' ),
-				/* translators: 1: dashboard link. * /
-				'complete'                        => __( 'All plugins installed and activated successfully. %1$s', 'wp-classroom' ),
-				'dismiss'                         => __( 'Dismiss this notice', 'wp-classroom' ),
-				'notice_cannot_install_activate'  => __( 'There are one or more required or recommended plugins to install, update or activate.', 'wp-classroom' ),
-				'contact_admin'                   => __( 'Please contact the administrator of this site for help.', 'wp-classroom' ),
-	
-				'nag_type'                        => '', // Determines admin notice type - can only be one of the typical WP notice classes, such as 'updated', 'update-nag', 'notice-warning', 'notice-info' or 'error'. Some of which may not work as expected in older WP versions.
-			),
-			*/
 		);
 	
 		tgmpa( $plugins, $config );
 	}
+
+	/**
+	 * Register our setting to WP
+	 * @since  0.1.0
+	 */
+	public function init() {
+		register_setting( $this->key, $this->key );
+	}
+
+	/**
+	 * Add menu options page
+	 * @since 0.1.0
+	 */
+	public function add_options_page() {
+		$title = 'Settings';
+		$this->options_page = add_submenu_page( 'edit.php?post_type=wp_classroom', $title, $title, 'manage_options', $this->key, array( $this, 'admin_page_display' ) );
+
+		// Include CMB CSS in the head to avoid FOUC
+		add_action( "admin_print_styles-{$this->options_page}", array( 'CMB2_hookup', 'enqueue_cmb_css' ) );
+	}
+
+	/**
+	 * Admin page markup. Mostly handled by CMB2
+	 * @since  0.1.0
+	 */
+	public function admin_page_display() {
+		?>
+		<div class="wrap cmb2-options-page <?php echo $this->key; ?>">
+			<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
+			<?php cmb2_metabox_form( $this->metabox_id, $this->key ); ?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Add the options metabox to the array of metaboxes
+	 * @since  0.1.0
+	 */
+	function add_options_page_metabox() {
+
+		// hook in our save notices
+		add_action( "cmb2_save_options-page_fields_{$this->metabox_id}", array( $this, 'settings_notices' ), 10, 2 );
+
+		$cmb = new_cmb2_box( array(
+			'id'         => $this->metabox_id,
+			'hookup'     => false,
+			'cmb_styles' => false,
+			'show_on'    => array(
+				// These are important, don't remove
+				'key'   => 'options-page',
+				'value' => array( $this->key, )
+			),
+		) );
+
+		$cmb->add_field( array(
+			'name' => __( 'Use Frontend Styles', $this->plugin_name ),
+			'id'   => 'frontend-styles',
+			'type' => 'checkbox',
+		) );
+
+		$cmb->add_field( array(
+			'name' => __( 'Class Count', $this->plugin_name ),
+			'id'   => 'class-count',
+			'type' => 'radio',
+			'options' => array(
+				'global' => 'Global',
+				'course' => 'Course',
+			)
+		) );
+
+	}
+
+	/**
+	 * Register settings notices for display
+	 *
+	 * @since  0.1.0
+	 * @param  int   $object_id Option key
+	 * @param  array $updated   Array of updated fields
+	 * @return void
+	 */
+	public function settings_notices( $object_id, $updated ) {
+		if ( $object_id !== $this->key || empty( $updated ) ) {
+			return;
+		}
+
+		add_settings_error( $this->key . '-notices', '', __( 'Settings updated.', 'myprefix' ), 'updated' );
+		settings_errors( $this->key . '-notices' );
+	}
+
+	/**
+	 * Public getter method for retrieving protected/private variables
+	 * @since  0.1.0
+	 * @param  string  $field Field to retrieve
+	 * @return mixed          Field value or exception is thrown
+	 */
+	public function __get( $field ) {
+		// Allowed fields to retrieve
+		if ( in_array( $field, array( 'key', 'metabox_id', 'title', 'options_page' ), true ) ) {
+			return $this->{$field};
+		}
+
+		throw new Exception( 'Invalid property: ' . $field );
+	}
+
 
 }

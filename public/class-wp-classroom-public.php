@@ -118,7 +118,7 @@ class WP_Classroom_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		if( $this->getOption('frontend-styles') == 1 ) {
+		if( $this->getOption('frontend-styles') == 'on' ) {
 			wp_enqueue_style( $this->WP_Classroom, plugin_dir_url( __FILE__ ) . 'css/wp-classroom-public.css', array(), $this->version, 'all' );
 		}
 
@@ -203,7 +203,7 @@ class WP_Classroom_Public {
 			$html = '<ol class="'.$args['class'].'">';
 			$count = 1;
 			foreach( $classes as $class ) {
-				if( $this->getOption('class-count') ) {
+				if( $this->getOption('class-count') == "course" ) {
 					$order_num = $count;	
 				} else {
 					$order_num = $class->menu_order;

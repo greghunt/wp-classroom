@@ -25,11 +25,16 @@
 			    <?php if($next = get_next_post()): ?>
 			    <a href="<?php echo get_permalink($next->ID) ?>"><?php _e('Skip Class', 'wp-classroom') ?></a>
 			    <?php endif; ?>
-			
+				
+				<?php 
+					$redirect = NULL;
+					if( $next )
+						$redirect = get_permalink($next->ID);
+				?>
 			    <?= apply_filters(
 			      'complete_class',
 			      array(
-			        'redirect' => get_permalink($next->ID),
+			        'redirect' => $redirect,
 			      )
 			    ) ?>
 			</div>
