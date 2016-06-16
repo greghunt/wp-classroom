@@ -52,7 +52,7 @@
 			$iframe_src = 'https://fast.wistia.net/embed/iframe/'. $video;
 			if( is_user_logged_in() ) {
 				$user = wp_get_current_user();
-				$iframe_src .= "?email=" . $user->user_email;
+				$iframe_src .= "?wemail=" . $user->user_email;
 			}
 			if( $options['video-host'] == "wistia" ) {
 				echo '<iframe src="'.$iframe_src.'" frameborder=0 width='.$defaults['width'].' style="min-height:440px">';
