@@ -82,6 +82,19 @@ class WP_Classroom_Admin {
 	}
 
 	/**
+	 * Method for getting plugin options
+	 *
+	 * @since    1.0.0
+	 */
+	 public function getOption($option_name) {
+		 $option = get_option('wp-classroom');
+		 if( isset($option[$option_name]) )
+ 			 return $option[$option_name];
+ 		else
+ 			return FALSE;
+	 }
+
+	/**
 	 * Register the stylesheets for the admin area.
 	 *
 	 * @since    1.0.0
@@ -260,13 +273,22 @@ class WP_Classroom_Admin {
 			'priority'     => 'high',
 			'show_names'   => true, // Show field names on the left
 		) );
-
-		$cmb_classroom->add_field( array(
-			'name' => __( 'Video', 'wp_classroom' ),
-			'desc' => __( 'The main class video.', 'wp_classroom' ),
-			'id'   => $prefix . 'video',
-			'type' => 'oembed',
-		) );
+		
+		if( $this->getOption('video-host') == "wistia" ) {
+			$cmb_classroom->add_field( array(
+				'name' => __( 'Video (Wistia)', 'wp_classroom' ),
+				'desc' => __( 'The main class video. Enter the Wistia Video ID.', 'wp_classroom' ),
+				'id'   => $prefix . 'video',
+				'type' => 'text',
+			) );			
+		} else {
+			$cmb_classroom->add_field( array(
+				'name' => __( 'Video', 'wp_classroom' ),
+				'desc' => __( 'The main class video.', 'wp_classroom' ),
+				'id'   => $prefix . 'video',
+				'type' => 'oembed',
+			) );
+		}
 
 	}
 
@@ -451,6 +473,17 @@ class WP_Classroom_Admin {
 			'options' => array(
 				'global' => 'Global',
 				'course' => 'Course',
+			)
+		) );
+
+		$cmb->add_field( array(
+			'name' => __( 'Video Host', $this->plugin_name ),
+			'id'   => 'video-host',
+			'type' => 'radio',
+			'default' => 'youtube',
+			'options' => array(
+				'youtube' => 'Youtube',
+				'wistia' => 'Wistia',
 			)
 		) );
 

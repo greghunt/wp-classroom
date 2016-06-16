@@ -47,7 +47,18 @@
 		  <div class="wpclr-class__multimedia">
 		  <?php
 		    $video = get_post_meta(get_the_ID(), 'wp_classroom_video', TRUE);
-		    echo wp_oembed_get( $video );
+		    $options = get_option('wp-classroom');
+		    $defaults = wp_embed_defaults();
+			$iframe_src = 'https://fast.wistia.net/embed/iframe/'. $video;
+			if( is_user_logged_in() ) {
+				$user = wp_get_current_user();
+				$iframe_src .= "?email=" . $user->user_email;
+			}
+			if( $options['video-host'] == "wistia" ) {
+				echo '<iframe src="'.$iframe_src.'" frameborder=0 width='.$defaults['width'].' style="min-height:440px">';
+			} else {
+				echo wp_oembed_get( $video );
+			}
 		  ?>
 		  </div>
 		  <nav class="class-course-nav">
