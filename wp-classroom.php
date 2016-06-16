@@ -8,14 +8,14 @@
  * that starts the plugin.
  *
  * @link              https://github.com/freshbrewedweb/wp-classroom
- * @since             1.1.7
+ * @since             1.1.8
  * @package           WP_Classroom
  *
  * @wordpress-plugin
  * Plugin Name:       Classroom
  * Plugin URI:        https://github.com/greghunt/wp-classroom
  * Description:       Create a multimedia classroom within your WordPress site.
- * Version:           1.1.7
+ * Version:           1.1.8
  * Author:            Fresh Brewed Web
  * Author URI:        https://freshbrewedweb.com
  * License:           GPL-2.0+
