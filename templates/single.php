@@ -12,6 +12,34 @@
  * @subpackage WP_Classroom/templates
  */
 ?>
+<?php
+	
+    $video = get_post_meta(get_the_ID(), 'wp_classroom_video', TRUE);
+    $options = get_option('wp-classroom');
+	if( $options['video-host'] == "wistia" ) {
+	    $defaults = wp_embed_defaults();
+		$iframe_src = 'https://fast.wistia.net/embed/iframe/'. $video;
+		$userEmail = NULL;
+			
+		if( is_user_logged_in() ) {
+			$user = wp_get_current_user();
+			if( isset($_GET['wemail']) ) {
+				if( $_GET['wemail'] == $user->user_email )
+					$userEmail = $user->user_email;
+				else 
+					$userEmail = NULL;
+			}
+			if( !$userEmail ) {
+				wp_redirect( add_query_arg( 'wemail', $user->user_email) );
+				exit;
+			}
+		}
+		$videoEmbed = '<iframe src="'.$iframe_src.'" frameborder=0 width='.$defaults['width'].' style="min-height:440px">';
+	} else {
+		$videoEmbed = wp_oembed_get( $video );
+	}
+	
+?>
 <?php get_header(); ?>
 
 <div id="primary" class="content-area">
@@ -46,19 +74,7 @@
 		  
 		  <div class="wpclr-class__multimedia">
 		  <?php
-		    $video = get_post_meta(get_the_ID(), 'wp_classroom_video', TRUE);
-		    $options = get_option('wp-classroom');
-		    $defaults = wp_embed_defaults();
-			$iframe_src = 'https://fast.wistia.net/embed/iframe/'. $video;
-			if( is_user_logged_in() ) {
-				$user = wp_get_current_user();
-				$iframe_src .= "?wemail=" . $user->user_email;
-			}
-			if( $options['video-host'] == "wistia" ) {
-				echo '<iframe src="'.$iframe_src.'" frameborder=0 width='.$defaults['width'].' style="min-height:440px">';
-			} else {
-				echo wp_oembed_get( $video );
-			}
+			echo $videoEmbed;
 		  ?>
 		  </div>
 		  <nav class="class-course-nav">
