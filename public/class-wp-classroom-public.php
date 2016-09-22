@@ -21,7 +21,7 @@
  * @author     Greg Hunt <freshbrewedweb@gmail.com>
  */
 class WP_Classroom_Public {
-
+	
 	/**
 	 * The ID of this plugin.
 	 *
@@ -30,7 +30,7 @@ class WP_Classroom_Public {
 	 * @var      string    $WP_Classroom    The ID of this plugin.
 	 */
 	private $WP_Classroom;
-
+	
 	/**
 	 * The version of this plugin.
 	 *
@@ -39,7 +39,7 @@ class WP_Classroom_Public {
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	private $version;
-
+	
 	/**
 	 * CSS Class Prefix
 	 *
@@ -48,7 +48,7 @@ class WP_Classroom_Public {
 	 * @var      string    $version    The current version of the plugin.
 	 */
 	public $prefix = 'wpclr';
-
+	
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -57,56 +57,56 @@ class WP_Classroom_Public {
 	 * @param      string    $version    The version of this plugin.
 	 */
 	public function __construct( $WP_Classroom, $version ) {
-
+		
 		$this->WP_Classroom = $WP_Classroom;
 		$this->version = $version;
-
+		
 	}
-
+	
 	/**
 	 * Method for getting plugin options
 	 *
 	 * @since    1.0.0
 	 */
-	 public function getOption($option_name) {
-		 $option = get_option('wp-classroom');
-		 if( isset($option[$option_name]) )
- 			 return $option[$option_name];
- 		else
- 			return FALSE;
-	 }
-
-	 /**
- 	 * Method for loading public templates
- 	 *
- 	 * @since    1.0.0
- 	 */
-	public function get_template_path( $slug, $name = NULL, $load = FALSE ) {
-	   $wp_classroom_template_loader = new WP_Classroom_Template_Loader;
-	   return $wp_classroom_template_loader->get_template_part( $slug, $name, $load );
+	public function getOption($option_name) {
+		$option = get_option('wp-classroom');
+		if( isset($option[$option_name]) )
+			return $option[$option_name];
+		else
+			return FALSE;
 	}
-
+	
+	/**
+	 * Method for loading public templates
+	 *
+	 * @since    1.0.0
+	 */
+	public function get_template_path( $slug, $name = NULL, $load = FALSE ) {
+		$wp_classroom_template_loader = new WP_Classroom_Template_Loader;
+		return $wp_classroom_template_loader->get_template_part( $slug, $name, $load );
+	}
+	
 	//Template for Single Course
 	public function get_wp_classroom_template($single_template) {
 		global $post;
-
+		
 		if ($post->post_type == 'wp_classroom') {
 			add_filter('the_content', 'do_shortcode');
 			$single_template = $this->get_template_path( 'single' );
 		}
-
+		
 		return $single_template;
-
+		
 	}
-
-
+	
+	
 	/**
 	 * Register the stylesheets for the public-facing side of the site.
 	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
-
+		
 		/**
 		 * This function is provided for demonstration purposes only.
 		 *
@@ -121,16 +121,16 @@ class WP_Classroom_Public {
 		if( $this->getOption('frontend-styles') == 'on' ) {
 			wp_enqueue_style( $this->WP_Classroom, plugin_dir_url( __FILE__ ) . 'css/wp-classroom-public.css', array(), $this->version, 'all' );
 		}
-
+		
 	}
-
+	
 	/**
 	 * Register the JavaScript for the public-facing side of the site.
 	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-
+		
 		/**
 		 * This function is provided for demonstration purposes only.
 		 *
@@ -142,11 +142,11 @@ class WP_Classroom_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
+		
 		wp_enqueue_script( $this->WP_Classroom, plugin_dir_url( __FILE__ ) . 'js/wp-classroom-public.js', array( 'jquery' ), $this->version, false );
-
+		
 	}
-
+	
 	/**
 	 * Registers all shortcodes at once
 	 *
@@ -160,8 +160,8 @@ class WP_Classroom_Public {
 		add_shortcode( 'course_progress', array( $this, 'course_progress_shortcode' ) );
 		add_shortcode( 'classroom_login', array( $this, 'classroom_login_shortcode' ) );
 	} // register_shortcodes()
-
-
+	
+	
 	/**
 	 * Processes course_list shortcode
 	 *
@@ -179,7 +179,7 @@ class WP_Classroom_Public {
 		} elseif( get_class($queried_object) == "WP_Post" ) {
 			$id = $queried_object->ID;
 		}
-
+		
 		$defaults = array(
 			'orderby' => 'date',
 			'numbered' => 'false',
@@ -188,15 +188,15 @@ class WP_Classroom_Public {
 			'count_class' => $this->prefix.'-course-list__num',
 			'reveal' => FALSE,
 		);
-
+		
 		$args		= shortcode_atts( $defaults, $atts, 'course_list' );
-
+		
 		if( strtolower($args['reveal']) == 'true' ) {
 			$args['reveal'] = TRUE;
 		}
-
+		
 		$classes 	= $this->get_course_class_list( $args, get_term_by('slug', $args['course'], 'wp_course'), $args['reveal'] );
-
+		
 		if( is_string($classes) ) {
 			return $classes;
 		} else {
@@ -204,7 +204,7 @@ class WP_Classroom_Public {
 			$count = 1;
 			foreach( $classes as $class ) {
 				if( $this->getOption('class-count') == "course" ) {
-					$order_num = $count;	
+					$order_num = $count;
 				} else {
 					$order_num = $class->menu_order;
 				}
@@ -226,10 +226,10 @@ class WP_Classroom_Public {
 			}
 			$html .= '</ol>';
 		}
-
+		
 		return $html;
 	} // shortcode()
-
+	
 	/**
 	 * Processes student_profile shortcode
 	 *
@@ -240,18 +240,18 @@ class WP_Classroom_Public {
 	public function student_profile_shortcode( $atts ) {
 		$defaults['orderby'] 		= 'date';
 		$args			= shortcode_atts( $defaults, $atts, 'student_profile' );
-
+		
 		$student = wp_get_current_user();
-
+		
 		//print_r($student);
 		$html = '<figure class="'.$this->prefix.'-student-profile">';
 		$html .= get_avatar($student->ID, 300);
 		$html .= '<figcaption>'.$student->user_nicename.'</figcaption>';
 		$html .= '</figure>';
-
+		
 		return $html;
 	} // shortcode()
-
+	
 	/**
 	 * Outputs Button to complete class
 	 *
@@ -260,7 +260,7 @@ class WP_Classroom_Public {
 	 * @return	str	$html		Output the HTML
 	 */
 	public function complete_class_shortcode( $atts ) {
-
+		
 		$completed = FALSE;
 		$defaults['class'] 		= 'wpclr-complete-class';
 		$defaults['button_text'] = __('Complete Class', 'wp_classroom');
@@ -268,25 +268,25 @@ class WP_Classroom_Public {
 		$defaults['course'] = '';
 		
 		$completed_courses = $this->get_user_completed_courses(get_current_user_id());
-
+		
 		if( $courses = wp_get_post_terms(get_the_ID(), 'wp_course') ) {
 			foreach( $courses as $course ) {
-
+				
 				if(
 					isset($completed_courses[$course->term_id]) &&
 					in_array(get_the_ID(), $completed_courses[$course->term_id])
 				) {
 					$completed = TRUE;
 				}
-
+				
 				$defaults['course'] .= $course->term_id;
 				if( end($courses) !== $course )
 					$defaults['course'] .= ',';
 			}
 		}
-
+		
 		$args	= shortcode_atts( $defaults, $atts, 'complete_class' );
-
+		
 		if( $completed ) {
 			$html = '<button type="button" class="'.$args['class'].'" disabled>' . __('Completed', 'wp-classroom') . '</button>';
 		} else {
@@ -299,10 +299,10 @@ class WP_Classroom_Public {
 			$html .= '<button type="submit" class="'.$args['class'].'">' . $args['button_text'] . '</button>';
 			$html .= '</form>';
 		}
-
+		
 		return $html;
 	} // shortcode()
-
+	
 	/**
 	 * Processes courses shortcode
 	 *
@@ -319,7 +319,7 @@ class WP_Classroom_Public {
 		$defaults['thumbnail'] = "true";
 		$args		= shortcode_atts( $defaults, $atts, 'courses' );
 		$courses 	= get_terms( 'wp_course', array('hide_empty' => 0) );
-
+		
 		if( $args['active'] ) {
 			$current_course = get_term_by('slug', $args['active'], 'wp_course');
 		} else {
@@ -333,38 +333,38 @@ class WP_Classroom_Public {
 				}
 			}
 		}
-
+		
 		$html = '<ul class="'. $args['class'] .'">';
 		foreach( $courses as $course ) {
 			$term_meta = get_term_meta($course->term_id);
 			$html .= '<li class="'.$this->prefix.'-course ';
 			$html .= $this->prefix.'-course--'.$course->slug;
-
+			
 			if( is_array($current_course) && in_array($course->term_id, $current_course) ) {
 				$html .= ' ' . $this->prefix.'-course--active';
 			} elseif( $current_course == $course )  {
 				$html .= ' ' . $this->prefix.'-course--active';
 			}
 			$html .= '"><a href="'. get_term_link($course) .'">';
-
+			
 			if( isset($term_meta['image'][0]) && $args['thumbnail'] === "true" ) {
 				$term_image = wp_get_attachment_image($term_meta['image'][0], 'medium');
 				$html .= '<span class="'.$this->prefix.'-course__img">' . $term_image . '</span>';
 			}
-
+			
 			$html .= '<span class="'.$this->prefix.'-course__title">' . $course->name . '</span>';
 			$html .= '</a></li>';
 		}
 		$html .= '</ul>';
-
+		
 		return $html;
 	} // shortcode()
-
-
+	
+	
 	public function get_course_class_list( array $args, $course = NULL, $reveal = FALSE ) {
 		global $post;
 		$return = '';
-
+		
 		if( $course ) {
 			$course_terms[] = $course->slug;
 		} else {
@@ -375,7 +375,7 @@ class WP_Classroom_Public {
 				$course_terms[] = $course->slug;
 			}
 		}
-
+		
 		$default_args = array(
 			'post_type' => 'wp_classroom',
 			'tax_query' => array( //Only Include classes from current courses
@@ -392,12 +392,12 @@ class WP_Classroom_Public {
 		if( $reveal ) {
 			$default_args['suppress_filters'] = TRUE;
 		}
-
+		
 		//Combine defaults with passed args
 		$args = array_merge($default_args, $args);
-
+		
 		$query = new WP_Query( $args );
-
+		
 		if ( 0 == $query->found_posts ) {
 			$return = '<div class="alert alert-warning">' . __('There are currently no classes available.', 'wp-classroom') . '.</div>';
 		} else {
@@ -412,129 +412,133 @@ class WP_Classroom_Public {
 				}
 				$classes[] = $class;
 			}
-
+			
 			$return = $classes;
 		}
-
+		
 		return $return;
 	}
-
+	
 	public function complete_class() {
-	    // Handle request then generate response using WP_Ajax_Response
-			$user_id = get_current_user_id();
-			if( $user_id !== 0 && ( $id = $_POST['class_id'] ) && $_POST['course'] ) {
-				$courses = explode(',', $_POST['course']);
-				$completed_courses = $this->get_user_completed_courses($user_id);
-
-				if( !is_array($completed_courses) )
-					$completed_courses = array();
-
-				foreach( $courses as $course ) {
-					if( isset($completed_courses[$course]) && in_array($id, $completed_courses[$course]) ) {
-						continue;
-					}
-					$completed_courses[$course][] = $id;
+		// Handle request then generate response using WP_Ajax_Response
+		$user_id = get_current_user_id();
+		if( $user_id !== 0 && ( $id = $_POST['class_id'] ) && $_POST['course'] ) {
+			$courses = explode(',', $_POST['course']);
+			$completed_courses = $this->get_user_completed_courses($user_id);
+			
+			if( !is_array($completed_courses) )
+				$completed_courses = array();
+			
+			foreach( $courses as $course ) {
+				if( isset($completed_courses[$course]) && in_array($id, $completed_courses[$course]) ) {
+					continue;
 				}
-				update_user_meta( $user_id, 'wp_classroom_completed', $completed_courses );
+				$completed_courses[$course][] = $id;
 			}
-
-			if( $_POST['redirect'] ) {
-				$redirect = $_POST['redirect'];
-			} elseif( $_POST['return'] ) {
-				$redirect = $_POST['redirect'];
-			} else {
-				$redirect = home_url();
-			}
-
-			wp_redirect($redirect);
-			exit();
-
+			update_user_meta( $user_id, 'wp_classroom_completed', $completed_courses );
+		}
+		
+		if( $_POST['redirect'] ) {
+			$redirect = $_POST['redirect'];
+		} elseif( $_POST['return'] ) {
+			$redirect = $_POST['redirect'];
+		} else {
+			$redirect = home_url();
+		}
+		
+		wp_redirect($redirect);
+		exit();
+		
 	}
-
+	
 	public function course_progress_shortcode() {
 		$terms = wp_get_post_terms( get_the_ID(), 'wp_course' );
 		$course = $terms[0];
 		$completed = $this->get_course_progress( $course );
-
+		
 		$html = '<h5 class="' . $this->prefix .'-progress-txt">' . $course->name . ' ' .$completed.' % Completed</h5>';
 		$html .= '<div class="' . $this->prefix .'-progress-bar">';
 		$html .= '<span class="' . $this->prefix .'-progress-indicator" style="width:'.$completed.'%"></span>';
 		$html .= '</div>';
-
+		
 		return $html;
 	}
-
+	
 	private function get_course_progress( $course ) {
 		$total = $course->count;
 		$completions = $this->get_user_completed_courses(get_current_user_id());
-		$course_completions = $completions[$course->term_id];
-
+		
+		if( isset($completions[$course->term_id]) )
+			$course_completions = $completions[$course->term_id];
+		else
+			$course_completions = NULL;
+		
 		if( is_null($course_completions) )
 			return 0;
 		else
 			$ratio = (count($course_completions) / $total) * 100;
-
+		
 		return number_format($ratio); //% completed
 	}
-
+	
 	private function get_user_completed_courses( $user_id = NULL ) {
 		if( !$user_id )
 			$user_id = get_current_user_id();
 		return get_user_meta($user_id, 'wp_classroom_completed', TRUE);
 	}
-
+	
 	/**
 	 * classroom_login_shortcode
 	 */
 	public function classroom_login_shortcode( $atts, $content = NULL ) {
 		if ( is_user_logged_in() )
 			return '';
-
+		
 		$html = '';
 		if( !is_null($content) ) {
 			$html .= $content;
 		}
-
+		
 		$class = get_posts(array(
 			'post_type' => 'wp_classroom',
 			'posts_per_page' => 1
 		));
-
+		
 		$html .= wp_login_form( array(
 			'redirect' => get_permalink($class[0]),
 			'echo' => false
 		) );
 		return $html;
-
+		
 	}
-
-
+	
+	
 	/**
 	 * Customize Adjacent Post Link Order
 	 */
 	public function order_adjacent_post_where($sql) {
-	  if ( !is_main_query() || !is_singular() )
-	    return $sql;
-
-	  $the_post = get_post( get_the_ID() );
-	  $patterns = array();
-	  $patterns[] = '/post_date/';
-	  $patterns[] = '/\'[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\'/';
-	  $replacements = array();
-	  $replacements[] = 'menu_order';
-	  $replacements[] = $the_post->menu_order;
-	  return preg_replace( $patterns, $replacements, $sql );
+		if ( !is_main_query() || !is_singular() )
+			return $sql;
+		
+		$the_post = get_post( get_the_ID() );
+		$patterns = array();
+		$patterns[] = '/post_date/';
+		$patterns[] = '/\'[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\'/';
+		$replacements = array();
+		$replacements[] = 'menu_order';
+		$replacements[] = $the_post->menu_order;
+		return preg_replace( $patterns, $replacements, $sql );
 	}
-
+	
 	public function adjacent_post_sort($sql) {
-	  if ( get_post_type() == "wp_classroom" ) {
-		$pattern = '/post_date/';
-		$replacement = 'menu_order';
-		return preg_replace( $pattern, $replacement, $sql );
-	  }
-
-	  return $sql;
-
+		if ( get_post_type() == "wp_classroom" ) {
+			$pattern = '/post_date/';
+			$replacement = 'menu_order';
+			return preg_replace( $pattern, $replacement, $sql );
+		}
+		
+		return $sql;
+		
 	}
-
+	
 }
