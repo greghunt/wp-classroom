@@ -505,7 +505,7 @@ class WP_Classroom_Public {
 		));
 		
 		$html .= wp_login_form( array(
-			'redirect' => get_permalink($class[0]),
+			'redirect' => ( isset($class[0]) ? get_permalink($class[0]) : NULL),
 			'echo' => false
 		) );
 		return $html;
