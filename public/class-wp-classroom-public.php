@@ -492,7 +492,7 @@ class WP_Classroom_Public {
 	 */
 	public function classroom_login_shortcode( $atts, $content = NULL ) {
 		if ( is_user_logged_in() )
-			return '';
+			return '<div class="alert aler-warning">You\'re already logged in.</div>';
 		
 		$html = '';
 		if( !is_null($content) ) {
