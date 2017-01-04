@@ -501,6 +501,8 @@ class WP_Classroom_Public {
 		
 		$class = get_posts(array(
 			'post_type' => 'wp_classroom',
+			'orderby' => 'menu_order',
+			'order' => 'ASC',
 			'posts_per_page' => 1
 		));
 		
