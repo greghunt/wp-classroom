@@ -195,6 +195,7 @@ class WP_Classroom {
 		$this->loader->add_filter( 'get_next_post_sort', $plugin_public, 'adjacent_post_sort' );
 		$this->loader->add_filter( 'get_next_post_where', $plugin_public, 'order_adjacent_post_where' );
 		$this->loader->add_filter( 'get_previous_post_where', $plugin_public, 'order_adjacent_post_where' );
+		$this->loader->add_filter( 'body_class', $plugin_public, 'add_body_class' );
 
 		$this->loader->add_action( 'init', $plugin_public, 'register_shortcodes' );
 		$this->loader->add_action( 'wp_ajax_complete_class', $plugin_public, 'complete_class' );
