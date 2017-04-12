@@ -543,4 +543,12 @@ class WP_Classroom_Public {
 		
 	}
 	
+	public function add_body_class($classes) {
+	  if (get_post_type() == "wp_classroom" ) {
+	      $classes[] = get_post_type();
+	  }
+	  // return the $classes array
+	  return $classes;
+	}
+	
 }
