@@ -34,7 +34,7 @@
 				exit;
 			}
 		}
-		$videoEmbed = '<iframe src="'.$iframe_src.'" frameborder=0 width='.$defaults['width'].' style="min-height:440px">';
+		$videoEmbed = '<iframe src="'.$iframe_src.'" frameborder=0 width='.$defaults['width'].' style="min-height:440px"></iframe>';
 	} else {
 		$videoEmbed = wp_oembed_get( $video );
 	}
