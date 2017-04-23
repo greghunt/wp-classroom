@@ -184,6 +184,9 @@ class WP_Classroom_Public {
 			'orderby' => 'date',
 			'numbered' => 'false',
 			'course' => NULL,
+			'thumbnail' => false,
+			'thumbnail_size' => 'thumbnail',
+			'thumbnail_class' => $this->prefix.'-course-list__thumb',
 			'class' => $this->prefix.'-course-list',
 			'count_class' => $this->prefix.'-course-list__num',
 			'reveal' => FALSE,
@@ -219,6 +222,11 @@ class WP_Classroom_Public {
 				$html .= '"><a href="'. get_permalink($class) .'">';
 				if( $args['numbered'] == "true" ) {
 					$html .= '<span class="'.$args['count_class'].'">'.$order_num.'</span> ';
+				}
+				if( $args['thumbnail'] == "true" ) {
+					$html .= '<span class="'.$args['thumbnail_class'].'">';
+					$html .= get_the_post_thumbnail($class, $args['thumbnail_size']);
+					$html .= '</span>';
 				}
 				$html .= $class->post_title;
 				$html .= '</a></li>';
