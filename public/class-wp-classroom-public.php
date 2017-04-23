@@ -353,6 +353,7 @@ class WP_Classroom_Public {
 			} elseif( $current_course == $course )  {
 				$html .= ' ' . $this->prefix.'-course--active';
 			}
+			$html .= ' data-course="'.$course->slug.'"';
 			$html .= '"><a href="'. get_term_link($course) .'">';
 			
 			if( isset($term_meta['image'][0]) && $args['thumbnail'] === "true" ) {
