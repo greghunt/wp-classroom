@@ -228,7 +228,7 @@ class WP_Classroom_Public {
 					$html .= get_the_post_thumbnail($class, $args['thumbnail_size']);
 					$html .= '</span>';
 				}
-				$html .= $class->post_title;
+				$html .= '<span class="'.$args['class'].'__text">' . $class->post_title . '</span>';
 				$html .= '</a></li>';
 				$count++;
 			}
