@@ -15,7 +15,7 @@
  * Plugin Name:       Classroom
  * Plugin URI:        https://github.com/greghunt/wp-classroom
  * Description:       Create a multimedia classroom within your WordPress site.
- * Version:           1.1.13
+ * Version:           1.1.14
  * Author:            Fresh Brewed Web
  * Author URI:        https://freshbrewedweb.com
  * License:           GPL-2.0+
