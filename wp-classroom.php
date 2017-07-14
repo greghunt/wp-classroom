@@ -8,7 +8,7 @@
  * that starts the plugin.
  *
  * @link              https://github.com/freshbrewedweb/wp-classroom
- * @since             1.1.8
+ * @since             1.1.9
  * @package           WP_Classroom
  *
  * @wordpress-plugin
@@ -78,8 +78,10 @@ require_once WP_Classroom_PLUGIN_DIR . 'vendor/TGM-Plugin-Activation/class-tgm-p
 require WP_Classroom_PLUGIN_DIR . 'vendor/wp-term-images/wp-term-images.php';
 
 //Groups WooCommerce
-define('GROUPS_WS_CORE_DIR', WP_Classroom_PLUGIN_DIR . 'vendor/groups-woocommerce' );
-require GROUPS_WS_CORE_DIR . '/groups-woocommerce.php';
+if( !defined('GROUPS_WS_CORE_DIR') ) {
+	define('GROUPS_WS_CORE_DIR', WP_Classroom_PLUGIN_DIR . 'vendor/groups-woocommerce' );
+	require GROUPS_WS_CORE_DIR . '/groups-woocommerce.php';
+}
 
 /**
  * Begins execution of the plugin.
