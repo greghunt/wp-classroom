@@ -1,18 +1,5 @@
 <?php
 /**
- * The file that defines the core plugin class
- *
- * A class definition that includes attributes and functions used across both the
- * public-facing side of the site and the admin area.
- *
- * @link       https://github.com/greghunt/wp-classroom
- * @since      1.0.0
- *
- * @package    WP_Classroom
- * @subpackage WP_Classroom/includes
- */
-
-/**
  * The core plugin class.
  *
  * This is used to define internationalization, admin-specific hooks, and
@@ -109,6 +96,11 @@ class WP_Classroom {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-i18n.php';
 
 		/**
+		 * The class responsible for user restriction and access
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-users.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-classroom-admin.php';
@@ -124,9 +116,14 @@ class WP_Classroom {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-classroom-public.php';
 
+		/**
+		 * The class responsible for purchasing integration.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-purchase-handler.php';
+
 
 		$this->loader = new WP_Classroom_Loader();
-
+		Groups_Classroom_Purchase_Handler ::init();
 	}
 
 	/**
@@ -162,11 +159,15 @@ class WP_Classroom {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
 		$this->loader->add_action( 'cmb2_admin_init', $plugin_admin, 'classroom_register_metabox' );
-		$this->loader->add_action( 'tgmpa_register', $plugin_admin, 'wpclr_register_required_plugins' );
 
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'init' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_options_page' );
+
 		$this->loader->add_action( 'cmb2_admin_init', $plugin_admin, 'add_options_page_metabox' );
+		$this->loader->add_action( 'cmb2_admin_init', $plugin_admin, 'add_user_access_metabox' );
+
+		$purchasable = new WP_Classroom_Woocommerce_Purchase;
+		$purchasable->init();
 
 		//Add order to classroom table
 		$this->loader->add_action( 'manage_edit-wp_classroom_columns', $plugin_admin, 	'add_new_classes_column' );
@@ -199,6 +200,7 @@ class WP_Classroom {
 
 		$this->loader->add_action( 'init', $plugin_public, 'register_shortcodes' );
 		$this->loader->add_action( 'wp_ajax_complete_class', $plugin_public, 'complete_class' );
+		$this->loader->add_action( 'template_redirect', $plugin_public, 'restrict_access' );
 
 		/**
 		 * Action instead of template tag.
@@ -223,9 +225,7 @@ class WP_Classroom {
 		//Override Groups Restrict Categories function that hides terms
 		add_filter( 'list_terms_exclusions', '__return_false', 99, 3 );
 
-
-
-}
+	}
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
