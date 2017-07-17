@@ -166,8 +166,11 @@ class WP_Classroom {
 		$this->loader->add_action( 'cmb2_admin_init', $plugin_admin, 'add_options_page_metabox' );
 		$this->loader->add_action( 'cmb2_admin_init', $plugin_admin, 'add_user_access_metabox' );
 
-		$purchasable = new WP_Classroom_Woocommerce_Purchase;
-		$purchasable->init();
+		if ( class_exists( 'WooCommerce' ) )
+		{
+			$purchasable = new WP_Classroom_Woocommerce_Purchase;
+		    $purchasable->init();
+		}
 
 		//Add order to classroom table
 		$this->loader->add_action( 'manage_edit-wp_classroom_columns', $plugin_admin, 	'add_new_classes_column' );
