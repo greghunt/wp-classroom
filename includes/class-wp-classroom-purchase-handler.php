@@ -65,8 +65,37 @@ class Groups_Classroom_Purchase_Handler {
 	 */
 	public static function order_status_completed( $order_id ) {
 		$order = WP_Classroom_Woocommerce_Purchase::get_order( $order_id );
-		print_r($order);
-		die();
+		$cus_id = $order->user_id;
+		$items = $order->get_items();
+		$user = new WP_User($cus_id);
+		if(!WP_Classroom_Woocommerce_Purchase::is_course($order_id))
+			return;
+		foreach ($items as $l => $item)
+		{
+			$classes[] = $item['Classes'];
+			$courses[] = $item['Courses'];			
+		}
+		//var_dump($classes);
+		$existing_classes = get_user_meta($user->ID , 'wp-classroom_mb_user_class_access' , true);
+		$existing_courses = get_user_meta($user->ID , 'wp-classroom_mb_user_course_access' , true);
+		if( $classes == null )
+		{
+			$classes = $existing_classes;
+		}else
+		{
+			$classes = $existing_classes.','.implode(',',$classes);
+		}
+		if( $courses == null )
+		{
+			$courses = $existing_courses;
+		}else
+		{
+			$courses = $existing_courses.','.implode(',',$courses);
+		}
+		//print_r($classes);
+		//die('dead');
+		update_user_meta($user->ID , 'wp-classroom_mb_user_class_access' , $classes);
+		update_user_meta($user->ID , 'wp-classroom_mb_user_course_access' , $courses);
 	}
 	
 	/**

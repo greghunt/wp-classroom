@@ -18,13 +18,32 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 	 * Register own Groups tab and handle group association with products.
 	 * Register price display modifier.
 	 */
+
+    // TODO
+    // Disable default WooCommerce Email Templates and create template for classes.
+
 	public static function init() {
 		if ( is_admin() ) {
 			add_action( 'woocommerce_product_write_panel_tabs', array( __CLASS__, 'product_write_panel_tabs' ) );
-			add_action( 'woocommerce_product_write_panels',	    array( __CLASS__, 'product_write_panels' ) );
+
+			// Version check
+			if(version_compare( WOOCOMMERCE_VERSION, '2.6.0', '>' ) )
+			{
+				add_action( 'woocommerce_product_data_panels',	    array( __CLASS__, 'product_write_panels' ) );
+			}else
+			{
+				add_action( 'woocommerce_product_write_panels',	    array( __CLASS__, 'product_write_panels' ) );
+			}
+			
 			add_action( 'woocommerce_process_product_meta',	    array( __CLASS__, 'process_product_meta' ), 10, 2 );
 		}
 		add_filter( 'woocommerce_get_price_html', array( __CLASS__, 'woocommerce_get_price_html' ), 10, 2 );
+		add_action( 'woocommerce_before_add_to_cart_button', array( __CLASS__, 'class_product_input'), 5 );
+		add_action( 'woocommerce_add_order_item_meta', array( __CLASS__, 'class_order_meta'), 10, 2 );
+		add_filter( 'woocommerce_add_cart_item_data', array( __CLASS__, 'class_cart_data'), 10, 2 );
+		add_filter( 'woocommerce_get_cart_item_from_session', array( __CLASS__, 'class_cart_data_session'), 10, 2);
+		add_filter( 'woocommerce_get_item_data', array( __CLASS__, 'class_cart_item_data'), 10, 2 );
+		add_filter( 'the_content', array( __CLASS__, 'class_rights'));
 	}
 
     public function add_class_to_user() {
@@ -98,7 +117,9 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		echo '<tbody>';
         echo '<tr>';
         echo '<td>';
-		foreach( get_posts(array('post_type' => 'wp_classroom')) as $class ) {
+
+        $class_post = get_posts(array('post_type' => 'wp_classroom')) ;
+		foreach( $class_post as $class ) {
 			if ( $class = get_post($class) ) {
 				woocommerce_wp_checkbox(
 					array(
@@ -271,10 +292,16 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		// $options = get_option( 'groups-woocommerce', null );
 		// $show_duration = isset( $options[GROUPS_WS_SHOW_DURATION] ) ? $options[GROUPS_WS_SHOW_DURATION] : GROUPS_WS_DEFAULT_SHOW_DURATION;
 		$show_duration = true;
+		if(version_compare( WOOCOMMERCE_VERSION, '3.0.0', '>' ) )
+		{
+			$id = $product->get_id();
+		}else{
+			$id = $product->id;	
+		}
 		if ( $show_duration ) {
-			$duration     = get_post_meta( $product->id, '_classroom_duration', true );
+			$duration     = get_post_meta( $id, '_classroom_duration', true );
 			if ( !empty( $duration ) ) {
-				$duration_uom = get_post_meta( $product->id, '_classroom_duration_uom', true );
+				$duration_uom = get_post_meta( $id, '_classroom_duration_uom', true );
 				switch( $duration_uom ) {
 					case 'second' :
 						$price = sprintf( _n( '%s for 1 second', '%s for %d seconds', $duration, WP_CLASSROOM_NAMESPACE ), $price, $duration );
@@ -302,6 +329,159 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		}
 		return $price;
 	}
+
+	public static function class_product_input() 
+	{
+		global $product;
+		if(version_compare( WOOCOMMERCE_VERSION, '3.0.0', '>' ) )
+		{
+			$id = $product->get_id();
+		}else{
+			$id = $product->id;	
+		}
+		$duration = get_post_meta( $id, '_classroom_duration', true );
+		$duration_uom = get_post_meta( $id, '_classroom_duration_uom', true );
+		$courses = get_post_meta( $id, '_classroom_courses', true );
+		$classes = get_post_meta( $id, '_classroom_classes', true );
+		
+		if($courses != null )
+		{
+			$classes = implode(',',$classes);
+		}else{
+			$classes = '';
+		}
+		if($courses != null )
+		{
+			$courses = implode(',',$courses);
+		}else{
+			$courses = '';
+		}
+
+		echo '<input type="text" name="classroom_duration"  value="' . $duration . '"/>';
+		echo '<input type="text" name="classroom_duration_uom"  value="' . $duration_uom . '"/>';
+		echo '<input type="text" name="classes"  value="' . $classes . '"/>';
+		echo '<input type="text" name="courses"  value="' . $courses . '"/>';
+
+	}
+
+	public static function class_cart_data($cart_item_meta, $product_id)
+	{
+		global $woocommerce;
+		//var_dump($product_id);
+		$cart_item_meta['class'] = array();
+		if (isset($_POST['classroom_duration'])) {
+			$cart_item_meta['class'][] = array(
+		    'name' 		=> 'Class Duration',
+		    'value'		=> $_POST['classroom_duration'] 
+		    );	
+		}
+		if (isset($_POST['classroom_duration_uom'])) {
+			$cart_item_meta['class'][] = array(
+		    'name' 		=> 'Time unit',
+		    'value'		=> $_POST['classroom_duration_uom'] 
+		    );	
+		}
+		if (isset($_POST['classes']) && $_POST['classes'] !='') {
+			$cart_item_meta['class'][] = array(
+		    'name' 		=> 'Classes',
+		    'value'		=> $_POST['classes'] 
+		    );	
+		}	
+		if (isset($_POST['courses']) && $_POST['courses'] !='') {
+			$cart_item_meta['class'][] = array(
+		    'name' 		=> 'Courses',
+		    'value'		=> $_POST['courses'] 
+		    );	
+		}					
+		return $cart_item_meta;
+	}
+	
+	public static function class_cart_data_session($cart_item, $values)
+	{
+		if ( isset( $values['class'] ) ) :
+		$cart_item['class'] = $values['class'];
+		endif;
+		//var_dump($values['wds']);
+        return $cart_item;
+	}
+
+    public static function class_cart_item_data($other_data, $cart_item)
+	{
+		if ( isset( $cart_item['class'] ) ) :
+			foreach ( $cart_item['class'] as $class_product ) :
+				$name = $class_product['name'];
+			    $value = $class_product['value'];
+				$other_data[] = array(
+				'name' => $name,
+				'value' => $value,
+				);
+			endforeach;
+		endif;
+		return $other_data;
+	}
+	
+	public static function class_order_meta($item_id,$values)
+	{
+		if ( isset( $values['class'] ) ) :
+			foreach ( $values['class'] as $wds ) :
+			    $name = $wds['name'];
+			    woocommerce_add_order_item_meta($item_id, $name, $wds['value'] );
+			endforeach;
+		endif;
+	}
+
+	public static function class_rights($content)
+	{
+		global $post;
+		$access_message = 'You have not purchased this class'; //TODO add in settings options
+		$classes = WP_Classroom_Woocommerce_Purchase::get_user_classes();
+		$courses = get_the_terms($post->ID,'wp_course');
+
+		$term_bought = false;
+		$bought_courses = WP_Classroom_Woocommerce_Purchase::get_user_courses();
+		$bought_courses = explode(',',$bought_courses);
+		foreach( $courses as $course )
+		{
+			if( in_array( $course->term_id, $bought_courses ))
+			{
+				$term_bought = true;
+				break;
+			}
+		}
+		//var_dump(WP_Classroom_Woocommerce_Purchase::get_user_classes());
+		if( $post->post_type != 'wp_classroom' )
+			return $content;
+		$classes = explode(',',$classes);
+		if( in_array( $post->ID,$classes ) || $term_bought )
+		{
+			return $content;
+		}else
+		{
+			return $access_message;
+		}
+	}
+
+	//Check if order contains course product
+	public static function is_course($order_id)
+	{
+		$order = WP_Classroom_Woocommerce_Purchase::get_order( $order_id );
+		$cus_id = $order->user_id;
+		$items = $order->get_items();
+		$user = new WP_User($cus_id);
+		$is_course = false;
+		foreach ($items as $l => $item)
+		{			
+			if(isset($item['Classes']) || isset($item['Courses']))
+			{
+				$classes[] = $item['Classes'];
+				$courses[] = $item['Courses'];		
+				$is_course = true;
+				break;	
+			}	
+		}
+		return $is_course;
+	}
+	
 
 	/**
 	 * Retruns true if the membership is limited.
