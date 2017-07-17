@@ -357,10 +357,17 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 			$courses = '';
 		}
 
+<<<<<<< HEAD
 		echo '<input type="hidden" name="classroom_duration"  value="' . $duration . '"/>';
 		echo '<input type="hidden" name="classroom_duration_uom"  value="' . $duration_uom . '"/>';
 		echo '<input type="hidden" name="classes"  value="' . $classes . '"/>';
 		echo '<input type="hidden" name="courses"  value="' . $courses . '"/>';
+=======
+		echo '<input type="text" name="classroom_duration"  value="' . $duration . '"/>';
+		echo '<input type="text" name="classroom_duration_uom"  value="' . $duration_uom . '"/>';
+		echo '<input type="text" name="classes"  value="' . $classes . '"/>';
+		echo '<input type="text" name="courses"  value="' . $courses . '"/>';
+>>>>>>> origin/2.0.0
 
 	}
 
