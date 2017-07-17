@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -10,16 +9,8 @@
  * @subpackage WP_Classroom/admin
  */
 
-/**
- * The admin-specific functionality of the plugin.
- *
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the admin-specific stylesheet and JavaScript.
- *
- * @package    WP_Classroom
- * @subpackage WP_Classroom/admin
- * @author     Your Name <email@example.com>
- */
+require_once( WP_CLASSROOM_PLUGIN_DIR . '/includes/class-woocommerce-purchase.php' );
+
 class WP_Classroom_Admin {
 
 	/**
@@ -73,9 +64,9 @@ class WP_Classroom_Admin {
 	 */
 	public function __construct( $WP_Classroom, $version ) {
 
-		$this->WP_Classroom = $WP_Classroom;
-		$this->plugin_name = $WP_Classroom;
-		$this->version = $version;
+		$this->WP_Classroom = WP_CLASSROOM_NAMESPACE;
+		$this->plugin_name = WP_CLASSROOM_NAMESPACE;
+		$this->version = WP_CLASSROOM_VERSION;
 		$this->key = $this->plugin_name;
 		$this->metabox_id = $this->key . '_mb';
 
@@ -87,7 +78,7 @@ class WP_Classroom_Admin {
 	 * @since    1.0.0
 	 */
 	 public function getOption($option_name) {
-		 $option = get_option('wp-classroom');
+		 $option = get_option(WP_CLASSROOM_NAMESPACE);
 		 if( isset($option[$option_name]) )
  			 return $option[$option_name];
  		else
@@ -148,31 +139,31 @@ class WP_Classroom_Admin {
 	public function wp_classroom_post_type() {
 
 		$labels = array(
-			'name'                  => _x( 'Classes', 'Post Type General Name', 'wp-classroom' ),
-			'singular_name'         => _x( 'Class', 'Post Type Singular Name', 'wp-classroom' ),
-			'menu_name'             => __( 'Classroom', 'wp-classroom' ),
-			'name_admin_bar'        => __( 'Classroom', 'wp-classroom' ),
-			'archives'              => __( 'Class Archives', 'wp-classroom' ),
-			'parent_item_colon'     => __( 'Parent Class:', 'wp-classroom' ),
-			'all_items'             => __( 'All Classes', 'wp-classroom' ),
-			'add_new_item'          => __( 'Add New Class', 'wp-classroom' ),
-			'add_new'               => __( 'Add New', 'wp-classroom' ),
-			'new_item'              => __( 'New Class', 'wp-classroom' ),
-			'edit_item'             => __( 'Edit Class', 'wp-classroom' ),
-			'update_item'           => __( 'Update Class', 'wp-classroom' ),
-			'view_item'             => __( 'View Class', 'wp-classroom' ),
-			'search_items'          => __( 'Search Classes', 'wp-classroom' ),
-			'not_found'             => __( 'Not found', 'wp-classroom' ),
-			'not_found_in_trash'    => __( 'Not found in Trash', 'wp-classroom' ),
-			'featured_image'        => __( 'Featured Image', 'wp-classroom' ),
-			'set_featured_image'    => __( 'Set featured image', 'wp-classroom' ),
-			'remove_featured_image' => __( 'Remove featured image', 'wp-classroom' ),
-			'use_featured_image'    => __( 'Use as featured image', 'wp-classroom' ),
-			'insert_into_item'      => __( 'Insert into class', 'wp-classroom' ),
-			'uploaded_to_this_item' => __( 'Uploaded to this class', 'wp-classroom' ),
-			'items_list'            => __( 'Classroom', 'wp-classroom' ),
-			'items_list_navigation' => __( 'Classroom navigation', 'wp-classroom' ),
-			'filter_items_list'     => __( 'Filter classroom', 'wp-classroom' ),
+			'name'                  => _x( 'Classes', 'Post Type General Name', WP_CLASSROOM_NAMESPACE ),
+			'singular_name'         => _x( 'Class', 'Post Type Singular Name', WP_CLASSROOM_NAMESPACE ),
+			'menu_name'             => __( 'Classroom', WP_CLASSROOM_NAMESPACE ),
+			'name_admin_bar'        => __( 'Classroom', WP_CLASSROOM_NAMESPACE ),
+			'archives'              => __( 'Class Archives', WP_CLASSROOM_NAMESPACE ),
+			'parent_item_colon'     => __( 'Parent Class:', WP_CLASSROOM_NAMESPACE ),
+			'all_items'             => __( 'All Classes', WP_CLASSROOM_NAMESPACE ),
+			'add_new_item'          => __( 'Add New Class', WP_CLASSROOM_NAMESPACE ),
+			'add_new'               => __( 'Add New', WP_CLASSROOM_NAMESPACE ),
+			'new_item'              => __( 'New Class', WP_CLASSROOM_NAMESPACE ),
+			'edit_item'             => __( 'Edit Class', WP_CLASSROOM_NAMESPACE ),
+			'update_item'           => __( 'Update Class', WP_CLASSROOM_NAMESPACE ),
+			'view_item'             => __( 'View Class', WP_CLASSROOM_NAMESPACE ),
+			'search_items'          => __( 'Search Classes', WP_CLASSROOM_NAMESPACE ),
+			'not_found'             => __( 'Not found', WP_CLASSROOM_NAMESPACE ),
+			'not_found_in_trash'    => __( 'Not found in Trash', WP_CLASSROOM_NAMESPACE ),
+			'featured_image'        => __( 'Featured Image', WP_CLASSROOM_NAMESPACE ),
+			'set_featured_image'    => __( 'Set featured image', WP_CLASSROOM_NAMESPACE ),
+			'remove_featured_image' => __( 'Remove featured image', WP_CLASSROOM_NAMESPACE ),
+			'use_featured_image'    => __( 'Use as featured image', WP_CLASSROOM_NAMESPACE ),
+			'insert_into_item'      => __( 'Insert into class', WP_CLASSROOM_NAMESPACE ),
+			'uploaded_to_this_item' => __( 'Uploaded to this class', WP_CLASSROOM_NAMESPACE ),
+			'items_list'            => __( 'Classroom', WP_CLASSROOM_NAMESPACE ),
+			'items_list_navigation' => __( 'Classroom navigation', WP_CLASSROOM_NAMESPACE ),
+			'filter_items_list'     => __( 'Filter classroom', WP_CLASSROOM_NAMESPACE ),
 		);
 		$rewrite = array(
 			'slug'                  => 'classroom',
@@ -181,8 +172,8 @@ class WP_Classroom_Admin {
 			'feeds'                 => true,
 		);
 		$args = array(
-			'label'                 => __( 'Class', 'wp-classroom' ),
-			'description'           => __( 'Classroom', 'wp-classroom' ),
+			'label'                 => __( 'Class', WP_CLASSROOM_NAMESPACE ),
+			'description'           => __( 'Classroom', WP_CLASSROOM_NAMESPACE ),
 			'labels'                => $labels,
 			'supports'              => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments', 'custom-fields', 'page-attributes', ),
 			'hierarchical'          => true,
@@ -200,7 +191,7 @@ class WP_Classroom_Admin {
 			'rewrite'               => $rewrite,
 			'capability_type'       => 'post',
 		);
-		register_post_type( 'wp_classroom', $args );
+		register_post_type( WP_CLASSROOM_CLASS_POST_TYPE, $args );
 
 	}
 
@@ -249,12 +240,12 @@ class WP_Classroom_Admin {
 	 		'show_tagcloud'              => true,
 	 		'rewrite'              			 => $rewrite,
 	 	);
-	 	register_taxonomy( 'wp_course', array( 'wp_classroom' ), $args );
+	 	register_taxonomy( WP_CLASSROOM_COURSE_TAXONOMY, array( WP_CLASSROOM_CLASS_POST_TYPE ), $args );
 
 	 }
 
 	/**
-	 * Registers the Classroom Metabox
+	 * Registers the Classroom Options
 	 * @uses CMB2
 	 * @return [type] [description]
 	 */
@@ -273,14 +264,14 @@ class WP_Classroom_Admin {
 			'priority'     => 'high',
 			'show_names'   => true, // Show field names on the left
 		) );
-		
+
 		if( $this->getOption('video-host') == "wistia" ) {
 			$cmb_classroom->add_field( array(
 				'name' => __( 'Video (Wistia)', 'wp_classroom' ),
 				'desc' => __( 'The main class video. Enter the Wistia Video ID.', 'wp_classroom' ),
 				'id'   => $prefix . 'video',
 				'type' => 'text',
-			) );			
+			) );
 		} else {
 			$cmb_classroom->add_field( array(
 				'name' => __( 'Video', 'wp_classroom' ),
@@ -324,89 +315,6 @@ class WP_Classroom_Admin {
 	  return $columns;
 	}
 
-
-	/**
-	* Install dependent Plugins
-	*/
-	function wpclr_register_required_plugins() {
-		/*
-		 * Array of plugin arrays. Required keys are name and slug.
-		 * If the source is NOT from the .org repo, then source is also required.
-		 */
-		$plugins = array(
-	
-			array(
-				'name'         => 'Simple Page Ordering',
-				'slug'         => 'simple-page-ordering',
-				'required'     => false, 
-			),
-
-			array(
-				'name'         => 'WP Term Order',
-				'slug'         => 'wp-term-order',
-				'required'     => false, 
-			),
-
-			array(
-				'name'         => 'Woocommerce',
-				'slug'         => 'woocommerce',
-				'required'     => false, 
-			),
-
-			array(
-				'name'               => 'Groups Restrict Categories',
-				'slug'               => 'groups-restrict-categories', 
-				'source'             => WP_Classroom_PLUGIN_DIR . 'vendor/groups-restrict-categories-1.4.1.zip', 
-				'required'           => false,
-			),
-
-			array(
-				'name'         => 'Groups',
-				'slug'         => 'groups',
-				'required'     => false, 
-			),
-
-			array(
-				'name'         => 'Groups 404 Redirect',
-				'slug'         => 'groups-404-redirect',
-				'required'     => false, 
-			),
-
-		
-			array(
-				'name'      => 'GitHub Updater',
-				'slug'      => 'github-updater',
-				'source'    => 'https://github.com/afragen/github-updater/archive/develop.zip',
-				'required'  => TRUE,
-			),
-	
-		);
-	
-		/*
-		 * Array of configuration settings. Amend each line as needed.
-		 *
-		 * TGMPA will start providing localized text strings soon. If you already have translations of our standard
-		 * strings available, please help us make TGMPA even better by giving us access to these translations or by
-		 * sending in a pull-request with .po file(s) with the translations.
-		 *
-		 * Only uncomment the strings in the config array if you want to customize the strings.
-		 */
-		$config = array(
-			'id'           => 'wp-classroom',                 // Unique ID for hashing notices for multiple instances of TGMPA.
-			'default_path' => '',                      // Default absolute path to bundled plugins.
-			'menu'         => 'tgmpa-install-plugins', // Menu slug.
-			'parent_slug'  => 'plugins.php',            // Parent menu slug.
-			'capability'   => 'manage_options',    // Capability needed to view plugin install page, should be a capability associated with the parent menu used.
-			'has_notices'  => true,                    // Show admin notices or not.
-			'dismissable'  => true,                    // If false, a user cannot dismiss the nag message.
-			'dismiss_msg'  => '',                      // If 'dismissable' is false, this message will be output at top of nag.
-			'is_automatic' => false,                   // Automatically activate plugins after installation or not.
-			'message'      => '',                      // Message to output right before the plugins table.
-		);
-	
-		tgmpa( $plugins, $config );
-	}
-
 	/**
 	 * Register our setting to WP
 	 * @since  0.1.0
@@ -438,6 +346,10 @@ class WP_Classroom_Admin {
 			<?php cmb2_metabox_form( $this->metabox_id, $this->key ); ?>
 		</div>
 		<?php
+	}
+
+	public function add_product_purchase_metabox() {
+		WP_Classroom_Woocommerce_Purchase::add_product_metabox();
 	}
 
 	/**
@@ -485,6 +397,60 @@ class WP_Classroom_Admin {
 				'youtube' => 'Youtube',
 				'wistia' => 'Wistia',
 			)
+		) );
+
+	}
+
+	/**
+	 * Add metabox to the user profile
+	 * Used for assigning access to Classes and/or Courses.
+	 * @since  1.1.0
+	 */
+	function add_user_access_metabox() {
+		$prefix = $this->metabox_id . '_user_';
+		/**
+		 * Metabox
+		 */
+		$cmb_user = new_cmb2_box( array(
+			'id'               => $prefix . 'edit',
+			'title'            => __( 'Classroom', $this->plugin_name ), // Doesn't output for user boxes
+			'object_types'     => array( 'user' ), // Tells CMB2 to use user_meta vs post_meta
+			'show_names'       => true,
+			'new_user_section' => 'add-new-user', // where form will show on new user page. 'add-existing-user' is only other valid option.
+		) );
+		/**
+		 * Metabox Fields
+		 */
+		$cmb_user->add_field( array(
+			'name'     => __( 'Class Access', $this->plugin_name ),
+			'desc'     => __( 'Choose what individual classes and/or courses this user can access. Select and drag to reorder.', $this->plugin_name ),
+			'id'       => $prefix . 'access_title',
+			'type'     => 'title',
+			'on_front' => false,
+		) );
+
+		$cmb_user->add_field( array(
+			'name'     => __( 'Courses', $this->plugin_name ),
+			'id'       => $prefix . 'course_access',
+			'type'    => 'pw_multiselect',
+			'options' => function() {
+				$terms = get_terms('wp_course', array('hide_empty' => false) );
+				return wp_list_pluck( $terms, 'name', 'term_id' );
+			},
+		) );
+
+		$cmb_user->add_field( array(
+			'name'    => __( 'Classes', $this->plugin_name ),
+			'id'      => $prefix . 'class_access',
+			'type'    => 'pw_multiselect',
+			'options' => function() {
+				$defaults = array(
+					'post_type' => 'wp_classroom',
+					'posts_per_page' => -1
+				);
+				$query = new WP_Query( $defaults );
+				return wp_list_pluck( $query->get_posts(), 'post_title', 'ID' );
+			},
 		) );
 
 	}

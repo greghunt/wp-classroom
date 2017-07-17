@@ -30,7 +30,9 @@ class WP_Classroom_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-		//TODO: Doesn't seem to be working
+		$admin = new WP_Classroom_Admin( 'wp-classroom', '1.0.0' );
+		$admin->wp_classroom_post_type();
+		$admin->wp_classroom_taxonomy();
 		flush_rewrite_rules();
 	}
 

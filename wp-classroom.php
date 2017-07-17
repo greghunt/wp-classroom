@@ -1,36 +1,28 @@
 <?php
 /**
- * The plugin bootstrap file
- *
- * This file is read by WordPress to generate the plugin information in the plugin
- * admin area. This file also includes all of the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * that starts the plugin.
- *
- * @link              https://github.com/freshbrewedweb/wp-classroom
- * @since             1.1.9
- * @package           WP_Classroom
- *
- * @wordpress-plugin
- * Plugin Name:       Classroom
- * Plugin URI:        https://github.com/greghunt/wp-classroom
- * Description:       Create a multimedia classroom within your WordPress site.
- * Version:           1.1.15
- * Author:            Fresh Brewed Web
- * Author URI:        https://freshbrewedweb.com
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       wp-classroom
- * Domain Path:       /languages
- * GitHub Plugin URI: freshbrewedweb/wp-classroom
- */
+* Plugin Name: Classroom
+* Author: Fresh Brewed Web
+* Author URI: https://freshbrewedweb.com
+* Version: 1.0
+* Description: Create a digital video based classroom in WordPress. This plugin gives you the ability to publish classes. It's flexible enough to combine with other well known WordPress plugins to enhance the functionality.
+* Tags: classroom, education, school, woocommerce, video
+* License: GPL v3 or later
+*/
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'WP_Classroom_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'WP_CLASSROOM_VERSION', '1.0.0' );
+define( 'WP_CLASSROOM_NAMESPACE', 'wp-classroom' );
+define( 'WP_CLASSROOM_CLASS_POST_TYPE', 'wp_classroom' );
+define( 'WP_CLASSROOM_COURSE_TAXONOMY', 'wp_course' );
+
+define( 'WP_CLASSROOM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'WP_CLASSROOM_VENDOR_DIR', WP_CLASSROOM_PLUGIN_DIR . 'vendor' );
+
+$active_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ));
 
 /**
  * The code that runs during plugin activation.
@@ -66,21 +58,9 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-wp-classroom.php';
  */
 
 //Custom Meta Box 2
-if ( file_exists( WP_Classroom_PLUGIN_DIR . 'vendor/CMB2/init.php' ) ) {
-	require_once WP_Classroom_PLUGIN_DIR . 'vendor/CMB2/init.php';
-}
-
-//Plugin Acvtivator Class
-require_once WP_Classroom_PLUGIN_DIR . 'vendor/TGM-Plugin-Activation/class-tgm-plugin-activation.php';
-
-
-//WP Term Images
-require WP_Classroom_PLUGIN_DIR . 'vendor/wp-term-images/wp-term-images.php';
-
-//Groups WooCommerce
-if( !defined('GROUPS_WS_CORE_DIR') ) {
-	define('GROUPS_WS_CORE_DIR', WP_Classroom_PLUGIN_DIR . 'vendor/groups-woocommerce' );
-	require GROUPS_WS_CORE_DIR . '/groups-woocommerce.php';
+if ( file_exists( WP_CLASSROOM_VENDOR_DIR . '/CMB2/init.php' ) ) {
+	require_once WP_CLASSROOM_VENDOR_DIR . '/CMB2/init.php';
+	require_once WP_CLASSROOM_VENDOR_DIR . '/cmb-field-select2/cmb-field-select2.php';
 }
 
 /**
@@ -98,5 +78,5 @@ function run_WP_Classroom() {
 	$plugin->run();
 
 }
+
 run_WP_Classroom();
-//Execute shortcodes in widgets
