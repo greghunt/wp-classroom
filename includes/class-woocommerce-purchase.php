@@ -27,14 +27,14 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 			add_action( 'woocommerce_product_write_panel_tabs', array( __CLASS__, 'product_write_panel_tabs' ) );
 
 			// Version check
-			if(version_compare( WOOCOMMERCE_VERSION, '2.6.0', '>' ) )
-			{
+			//if(version_compare( WOOCOMMERCE_VERSION, '2.6.0', '>' ) )
+			//{
 				add_action( 'woocommerce_product_data_panels',	    array( __CLASS__, 'product_write_panels' ) );
-			}else
-			{
-				add_action( 'woocommerce_product_write_panels',	    array( __CLASS__, 'product_write_panels' ) );
-			}
-
+			//}else
+			//{
+			//	add_action( 'woocommerce_product_write_panels',	    array( __CLASS__, 'product_write_panels' ) );
+			//}
+			
 			add_action( 'woocommerce_process_product_meta',	    array( __CLASS__, 'process_product_meta' ), 10, 2 );
 		}
 		add_filter( 'woocommerce_get_price_html', array( __CLASS__, 'woocommerce_get_price_html' ), 10, 2 );
@@ -292,12 +292,12 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		// $options = get_option( 'groups-woocommerce', null );
 		// $show_duration = isset( $options[GROUPS_WS_SHOW_DURATION] ) ? $options[GROUPS_WS_SHOW_DURATION] : GROUPS_WS_DEFAULT_SHOW_DURATION;
 		$show_duration = true;
-		if(version_compare( WOOCOMMERCE_VERSION, '3.0.0', '>' ) )
-		{
+		//if(version_compare( WOOCOMMERCE_VERSION, '3.0.0', '>' ) )
+		//{
 			$id = $product->get_id();
-		}else{
-			$id = $product->id;
-		}
+		//}else{
+		//	$id = $product->id;	
+		//}
 		if ( $show_duration ) {
 			$duration     = get_post_meta( $id, '_classroom_duration', true );
 			if ( !empty( $duration ) ) {
@@ -330,20 +330,20 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		return $price;
 	}
 
-	public static function class_product_input()
+	public static function class_product_input() 
 	{
 		global $product;
-		if(version_compare( WOOCOMMERCE_VERSION, '3.0.0', '>' ) )
-		{
+		//if(version_compare( WOOCOMMERCE_VERSION, '3.0.0', '>' ) )
+		//{
 			$id = $product->get_id();
-		}else{
-			$id = $product->id;
-		}
+		//}else{
+		//	$id = $product->id;	
+		//}
 		$duration = get_post_meta( $id, '_classroom_duration', true );
 		$duration_uom = get_post_meta( $id, '_classroom_duration_uom', true );
 		$courses = get_post_meta( $id, '_classroom_courses', true );
 		$classes = get_post_meta( $id, '_classroom_classes', true );
-
+		
 		if($courses != null )
 		{
 			$classes = implode(',',$classes);
@@ -361,6 +361,7 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		echo '<input type="hidden" name="classroom_duration_uom"  value="' . $duration_uom . '"/>';
 		echo '<input type="hidden" name="classes"  value="' . $classes . '"/>';
 		echo '<input type="hidden" name="courses"  value="' . $courses . '"/>';
+
 	}
 
 	public static function class_cart_data($cart_item_meta, $product_id)
@@ -371,30 +372,30 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		if (isset($_POST['classroom_duration'])) {
 			$cart_item_meta['class'][] = array(
 		    'name' 		=> 'Class Duration',
-		    'value'		=> $_POST['classroom_duration']
-		    );
+		    'value'		=> $_POST['classroom_duration'] 
+		    );	
 		}
 		if (isset($_POST['classroom_duration_uom'])) {
 			$cart_item_meta['class'][] = array(
 		    'name' 		=> 'Time unit',
-		    'value'		=> $_POST['classroom_duration_uom']
-		    );
+		    'value'		=> $_POST['classroom_duration_uom'] 
+		    );	
 		}
 		if (isset($_POST['classes']) && $_POST['classes'] !='') {
 			$cart_item_meta['class'][] = array(
 		    'name' 		=> 'Classes',
-		    'value'		=> $_POST['classes']
-		    );
-		}
+		    'value'		=> $_POST['classes'] 
+		    );	
+		}	
 		if (isset($_POST['courses']) && $_POST['courses'] !='') {
 			$cart_item_meta['class'][] = array(
 		    'name' 		=> 'Courses',
-		    'value'		=> $_POST['courses']
-		    );
-		}
+		    'value'		=> $_POST['courses'] 
+		    );	
+		}					
 		return $cart_item_meta;
 	}
-
+	
 	public static function class_cart_data_session($cart_item, $values)
 	{
 		if ( isset( $values['class'] ) ) :
@@ -418,7 +419,7 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		endif;
 		return $other_data;
 	}
-
+	
 	public static function class_order_meta($item_id,$values)
 	{
 		if ( isset( $values['class'] ) ) :
@@ -469,18 +470,18 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		$user = new WP_User($cus_id);
 		$is_course = false;
 		foreach ($items as $l => $item)
-		{
+		{			
 			if(isset($item['Classes']) || isset($item['Courses']))
 			{
 				$classes[] = $item['Classes'];
-				$courses[] = $item['Courses'];
+				$courses[] = $item['Courses'];		
 				$is_course = true;
-				break;
-			}
+				break;	
+			}	
 		}
 		return $is_course;
 	}
-
+	
 
 	/**
 	 * Retruns true if the membership is limited.
@@ -523,7 +524,7 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		}
 		return $result;
 	}
-
+	
 	/**
 	 * Retrieve an order.
 	 *
@@ -539,7 +540,7 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		}
 		return $result;
 	}
-
+	
 	/**
 	 * Retrieve a product.
 	 *
@@ -556,7 +557,7 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		}
 		return $result;
 	}
-
+	
 	/**
 	 * Returns the order status key for the $status given.
 	 * Order status keys have changed in WC 2.2 and this is provided to make
