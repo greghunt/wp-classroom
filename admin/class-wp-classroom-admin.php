@@ -356,7 +356,7 @@ class WP_Classroom_Admin {
 	 * Add the options metabox to the array of metaboxes
 	 * @since  0.1.0
 	 */
-	function add_options_page_metabox() {
+	public function add_options_page_metabox() {
 
 		// hook in our save notices
 		add_action( "cmb2_save_options-page_fields_{$this->metabox_id}", array( $this, 'settings_notices' ), 10, 2 );
@@ -406,7 +406,7 @@ class WP_Classroom_Admin {
 	 * Used for assigning access to Classes and/or Courses.
 	 * @since  1.1.0
 	 */
-	function add_user_access_metabox() {
+	public function add_user_access_metabox() {
 		$prefix = $this->metabox_id . '_user_';
 		/**
 		 * Metabox
@@ -433,26 +433,38 @@ class WP_Classroom_Admin {
 			'name'     => __( 'Courses', $this->plugin_name ),
 			'id'       => $prefix . 'course_access',
 			'type'    => 'pw_multiselect',
-			'options' => function() {
-				$terms = get_terms('wp_course', array('hide_empty' => false) );
-				return wp_list_pluck( $terms, 'name', 'term_id' );
-			},
+			'options' => $this->courseOptions(),
 		) );
 
 		$cmb_user->add_field( array(
 			'name'    => __( 'Classes', $this->plugin_name ),
 			'id'      => $prefix . 'class_access',
 			'type'    => 'pw_multiselect',
-			'options' => function() {
-				$defaults = array(
-					'post_type' => 'wp_classroom',
-					'posts_per_page' => -1
-				);
-				$query = new WP_Query( $defaults );
-				return wp_list_pluck( $query->get_posts(), 'post_title', 'ID' );
-			},
+			'options' => $this->classOptions()
 		) );
 
+	}
+
+	/**
+	 * Get course options for select field
+	 * @return [type] [description]
+	 */
+	private function courseOptions() {
+		$terms = get_terms('wp_course', array('hide_empty' => false) );
+		return wp_list_pluck( $terms, 'name', 'term_id' );
+	}
+
+	/**
+	 * Get Class Options for select field.
+	 * @return [type] [description]
+	 */
+	private function classOptions() {
+		$defaults = array(
+			'post_type' => 'wp_classroom',
+			'posts_per_page' => -1
+		);
+		$query = new WP_Query( $defaults );
+		return wp_list_pluck( $query->get_posts(), 'post_title', 'ID' );
 	}
 
 	/**
