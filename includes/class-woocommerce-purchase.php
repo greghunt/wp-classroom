@@ -118,6 +118,11 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
         echo '<tr>';
         echo '<td>';
 
+        if( $classes == '' )
+        {
+        	$classes = array();
+        }
+
         $class_post = get_posts(array('post_type' => 'wp_classroom')) ;
 		foreach( $class_post as $class ) {
 			if ( $class = get_post($class) ) {
@@ -132,6 +137,10 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		}
         echo '</td>';
         echo '<td>';
+        if( $courses == '' )
+        {
+        	$courses = array();
+        }
 		foreach( get_terms(array('taxonomy' => 'wp_course')) as $course ) {
 			woocommerce_wp_checkbox(
 				array(
@@ -343,14 +352,14 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		$duration_uom = get_post_meta( $id, '_classroom_duration_uom', true );
 		$courses = get_post_meta( $id, '_classroom_courses', true );
 		$classes = get_post_meta( $id, '_classroom_classes', true );
-		
-		if($courses != null )
+
+		if($classes != null  || $classes != '' )
 		{
 			$classes = implode(',',$classes);
 		}else{
 			$classes = '';
 		}
-		if($courses != null )
+		if($courses != null || $courses != '' )
 		{
 			$courses = implode(',',$courses);
 		}else{
