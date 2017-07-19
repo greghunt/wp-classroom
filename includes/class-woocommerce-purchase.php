@@ -442,13 +442,17 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 	public static function class_rights($content)
 	{
 		global $post;
+
+		if( $post->post_type != 'wp_classroom' )
+			return $content;
+		
 		$access_message = 'You have not purchased this class'; //TODO add in settings options
 		$classes = WP_Classroom_Woocommerce_Purchase::get_user_classes();
 		$courses = get_the_terms($post->ID,'wp_course');
 
 		$term_bought = false;
 		$bought_courses = WP_Classroom_Woocommerce_Purchase::get_user_courses();
-		$bought_courses = explode(',',$bought_courses);
+		//$bought_courses = explode(',',$bought_courses);
 		foreach( $courses as $course )
 		{
 			if( in_array( $course->term_id, $bought_courses ))
@@ -458,9 +462,8 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 			}
 		}
 		//var_dump(WP_Classroom_Woocommerce_Purchase::get_user_classes());
-		if( $post->post_type != 'wp_classroom' )
-			return $content;
-		$classes = explode(',',$classes);
+		
+		//$classes = explode(',',$classes);
 		if( in_array( $post->ID,$classes ) || $term_bought )
 		{
 			return $content;

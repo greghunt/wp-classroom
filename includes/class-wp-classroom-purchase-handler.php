@@ -92,6 +92,8 @@ class Groups_Classroom_Purchase_Handler {
 		{
 			$courses = $existing_courses.','.implode(',',$courses);
 		}
+		$classes = explode(',',$classes);
+		$courses = explode(',',$courses);
 		//print_r($classes);
 		//die('dead');
 		update_user_meta($user->ID , 'wp-classroom_mb_user_class_access' , $classes);
