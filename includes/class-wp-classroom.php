@@ -60,6 +60,7 @@ class WP_Classroom {
 
 		$this->load_dependencies();
 		$this->set_locale();
+		$this->define_global_hooks();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 
@@ -101,6 +102,11 @@ class WP_Classroom {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-users.php';
 
 		/**
+		 * The class responsible for classroom videos
+		 */
+		require_once WP_CLASSROOM_PLUGIN_DIR . '/includes/class-wp-classroom-video.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-classroom-admin.php';
@@ -123,7 +129,6 @@ class WP_Classroom {
 
 
 		$this->loader = new WP_Classroom_Loader();
-		Groups_Classroom_Purchase_Handler ::init();
 	}
 
 	/**
@@ -141,6 +146,17 @@ class WP_Classroom {
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
+	}
+
+	/**
+	 * Register all of the hooks related to both admin and frontend.
+	 *
+	 * @since    2.0.0
+	 * @access   private
+	 */
+	private function define_global_hooks() {
+		$video = new WP_Classroom_Video();
+		$this->loader->add_action( 'init', $video, 'add_wistia_provider' );
 	}
 
 	/**
@@ -168,7 +184,7 @@ class WP_Classroom {
 
 		$purchasable = new WP_Classroom_Woocommerce_Purchase;
 		$purchasable->init();
-		
+
 		//Add order to classroom table
 		$this->loader->add_action( 'manage_edit-wp_classroom_columns', $plugin_admin, 	'add_new_classes_column' );
 		$this->loader->add_action( 'manage_wp_classroom_posts_custom_column', $plugin_admin, 	'show_order_column' );
@@ -199,6 +215,7 @@ class WP_Classroom {
 		$this->loader->add_filter( 'body_class', $plugin_public, 'add_body_class' );
 
 		$this->loader->add_action( 'init', $plugin_public, 'register_shortcodes' );
+		$this->loader->add_action( 'init', $plugin_public, 'add_email_to_url' );
 		$this->loader->add_action( 'wp_ajax_complete_class', $plugin_public, 'complete_class' );
 		$this->loader->add_action( 'template_redirect', $plugin_public, 'restrict_access' );
 

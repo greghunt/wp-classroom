@@ -317,6 +317,31 @@ class WP_Classroom_Public {
 	  return $classes;
 	}
 
+	/**
+	 * Add user's email to URL
+	 * @return  void
+	 */
+	public function add_email_to_url() {
+	    if( $this->getOption('add-email-url') == "on" ) {
+			$userEmail = NULL;
+
+			if( is_user_logged_in() ) {
+				$user = wp_get_current_user();
+				if( isset($_GET['wemail']) ) {
+					if( $_GET['wemail'] == $user->user_email )
+						$userEmail = $user->user_email;
+					else
+						$userEmail = NULL;
+				}
+
+				if( !$userEmail ) {
+					wp_redirect( add_query_arg( 'wemail', $user->user_email) );
+					exit;
+				}
+			}
+		}
+	}
+
 	private function is_classroom() {
 		return get_post_type() == WP_CLASSROOM_CLASS_POST_TYPE;
 	}

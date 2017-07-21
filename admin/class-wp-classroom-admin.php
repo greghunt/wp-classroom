@@ -265,22 +265,12 @@ class WP_Classroom_Admin {
 			'show_names'   => true, // Show field names on the left
 		) );
 
-		if( $this->getOption('video-host') == "wistia" ) {
-			$cmb_classroom->add_field( array(
-				'name' => __( 'Video (Wistia)', 'wp_classroom' ),
-				'desc' => __( 'The main class video. Enter the Wistia Video ID.', 'wp_classroom' ),
-				'id'   => $prefix . 'video',
-				'type' => 'text',
-			) );
-		} else {
-			$cmb_classroom->add_field( array(
-				'name' => __( 'Video', 'wp_classroom' ),
-				'desc' => __( 'The main class video.', 'wp_classroom' ),
-				'id'   => $prefix . 'video',
-				'type' => 'oembed',
-			) );
-		}
-
+		$cmb_classroom->add_field( array(
+			'name' => __( 'Video', 'wp_classroom' ),
+			'desc' => __( 'The main class video.', 'wp_classroom' ),
+			'id'   => $prefix . 'video',
+			'type' => 'oembed',
+		) );
 	}
 
 	/**
@@ -389,14 +379,10 @@ class WP_Classroom_Admin {
 		) );
 
 		$cmb->add_field( array(
-			'name' => __( 'Video Host', $this->plugin_name ),
-			'id'   => 'video-host',
-			'type' => 'radio',
-			'default' => 'youtube',
-			'options' => array(
-				'youtube' => 'Youtube',
-				'wistia' => 'Wistia',
-			)
+			'name' => __( 'Add Email to URL', $this->plugin_name ),
+			'desc' => __( 'This is useful for Wistia embeds, which will pass the email add allow you to track video usage per user.', $this->plugin_name ),
+			'id'   => 'add-email-url',
+			'type' => 'checkbox',
 		) );
 
 	}

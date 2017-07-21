@@ -10,12 +10,7 @@ License URI: https://www.gnu.org/licenses/gpl.html
 
 Create a digital video based classroom in WordPress. This plugin gives you the ability to publish classes. It's flexible enough to combine with other well known WordPress plugins to enhance the functionality.
 
-Want to restrict access to classes? Use alongside
-- [Groups](https://en-ca.wordpress.org/plugins/groups/)
-
-Want to sell your courses? Sell access to them with:
-- [WooCommerce](https://en-ca.wordpress.org/plugins/woocommerce/)
-- [Groups for WooCommerce](https://woocommerce.com/products/groups-woocommerce/)
+Want to sell your courses? Sell access to them with [WooCommerce](https://en-ca.wordpress.org/plugins/woocommerce/). Includes support for [subscriptions](https://woocommerce.com/products/woocommerce-subscriptions/).
 
 Organize your classes into Course groups? Try these helpers:
 - [Groups Restrict Categories](https://www.itthinx.com/plugins/groups-restrict-categories/)
@@ -56,13 +51,18 @@ This plugin was made to be particularly customizable and not too opinionated. To
 
 == Upgrade Notice ==
 
-= 1.1 =
+= 2.0.0 =
 We moved to our own access restriction system. Previously, we recommended users to use Groups plugin. This is no longer needed.
 
 = 1.0 =
 Hello, this is the first version.
 
 == Changelog ==
+
+= 2.0.0 =
+* Removed Wistia integration
+* Added redirect settings
+* Replaced Groups plugin dependency
 
 = 1.1 =
 * Fixed rewrite rules not flushing on activation.

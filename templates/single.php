@@ -13,32 +13,8 @@
  */
 ?>
 <?php
-
     $video = get_post_meta(get_the_ID(), 'wp_classroom_video', TRUE);
-    $options = get_option('wp-classroom');
-	if( $options['video-host'] == "wistia" ) {
-	    $defaults = wp_embed_defaults();
-		$iframe_src = 'https://fast.wistia.net/embed/iframe/'. $video;
-		$userEmail = NULL;
-
-		if( is_user_logged_in() ) {
-			$user = wp_get_current_user();
-			if( isset($_GET['wemail']) ) {
-				if( $_GET['wemail'] == $user->user_email )
-					$userEmail = $user->user_email;
-				else
-					$userEmail = NULL;
-			}
-			if( !$userEmail ) {
-				wp_redirect( add_query_arg( 'wemail', $user->user_email) );
-				exit;
-			}
-		}
-		$videoEmbed = '<iframe src="'.$iframe_src.'" frameborder=0 width='.$defaults['width'].' style="min-height:440px"></iframe>';
-	} else {
-		$videoEmbed = wp_oembed_get( $video );
-	}
-
+	$videoEmbed = wp_oembed_get( $video );
 ?>
 <?php get_header(); ?>
 
@@ -75,7 +51,7 @@ switch ( $template ) {
 }
 
 ?>
-	<div class="wrap">		
+	<div class="wrap">
 		<article <?php post_class(); ?>>
 			<header>
 				<h1 class="entry-title"><?php the_title(); ?></h1>
