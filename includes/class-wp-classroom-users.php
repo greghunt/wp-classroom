@@ -25,7 +25,20 @@ class WP_Classroom_User {
 		$this->class_access_key = 'wp-classroom_mb_user_class_access';
 		$this->course_access_key = 'wp-classroom_mb_user_course_access';
 	}
-	
+
+	/**
+	 * Method for getting plugin options
+	 *
+	 * @since    1.0.0
+	 */
+	public function getOption($option_name) {
+		$option = get_option('wp-classroom');
+		if( isset($option[$option_name]) )
+			return $option[$option_name];
+		else
+			return FALSE;
+	}
+
 	public function can_access() {
 		$this->user = wp_get_current_user();
 		$this->access = $this->set_access();
@@ -75,8 +88,8 @@ class WP_Classroom_User {
 	 * @return void
 	 */
 	public function forbidden() {
-		$this->forbiddenMessage();
-		// $this->redirect();
+		// $this->forbiddenMessage();
+		$this->redirect();
 	}
 
 	public function forbiddenMessage() {
@@ -84,7 +97,16 @@ class WP_Classroom_User {
 	}
 
 	public function redirect() {
-		wp_redirect(home_url());
+		global $post;
+		$url = wp_login_url();
+
+		if( $postRedirect = get_post_meta($post->ID, 'wp_classroom_redirect', TRUE) ) {
+			$url = get_permalink($postRedirect);
+		} elseif( $globalRedirect = $this->getOption('unauthorized-redirect') ) {
+			$url = get_permalink($globalRedirect);
+		}
+		
+		wp_redirect($url);
 	}
 
 	public function get_access() {
@@ -128,11 +150,11 @@ class WP_Classroom_User {
 	public static function remove_class_access( $user_id, $access ){
 		self::remove_access( $user_id, $access, 'class' );
 	}
-	
+
 	public static function remove_course_access( $user_id, $access ){
 		self::remove_access( $user_id, $access, 'course' );
 	}
-	
+
 	public static function update_access( $user_id, $access, $type = 'class' ) {
 		$key = 'wp-classroom_mb_user_'.$type.'_access';
 		$current_access = get_post_meta($user_id, $key, TRUE);
@@ -145,9 +167,9 @@ class WP_Classroom_User {
 	public static function update_class_access( $user_id, $access ){
 		self::remove_access( $user_id, $access, 'class' );
 	}
-	
+
 	public static function update_course_access( $user_id, $access ){
 		self::remove_access( $user_id, $access, 'course' );
 	}
-	
+
 }

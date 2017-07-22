@@ -271,6 +271,13 @@ class WP_Classroom_Admin {
 			'id'   => $prefix . 'video',
 			'type' => 'oembed',
 		) );
+
+		$cmb_classroom->add_field( array(
+			'name' => __( 'Redirect', 'wp_classroom' ),
+			'desc' => __( 'Redirect unauthorized users to this page ID.', 'wp_classroom' ),
+			'id'   => $prefix . 'redirect',
+			'type' => 'text_small',
+		) );
 	}
 
 	/**
@@ -383,6 +390,13 @@ class WP_Classroom_Admin {
 			'desc' => __( 'This is useful for Wistia embeds, which will pass the email add allow you to track video usage per user.', $this->plugin_name ),
 			'id'   => 'add-email-url',
 			'type' => 'checkbox',
+		) );
+
+		$cmb->add_field( array(
+			'name' => __( 'Access Redirect', $this->plugin_name ),
+			'desc' => __( 'Add the ID of the page you want to send users who are not logged in. If left blank they will be sent to the default login. If specified on a course or class, that will be used in priority.', $this->plugin_name ),
+			'id'   => 'unauthorized-redirect',
+			'type' => 'text_small',
 		) );
 
 	}
