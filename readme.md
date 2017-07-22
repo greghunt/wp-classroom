@@ -4,7 +4,7 @@ Donate link: https://freshbrewedweb.com
 Tags: classroom, education, school, woocommerce
 Requires at least: 3.7
 Tested up to: 4.8
-Stable tag: 1.0
+Stable tag: 2.0.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -13,7 +13,6 @@ Create a digital video based classroom in WordPress. This plugin gives you the a
 Want to sell your courses? Sell access to them with [WooCommerce](https://en-ca.wordpress.org/plugins/woocommerce/). Includes support for [subscriptions](https://woocommerce.com/products/woocommerce-subscriptions/).
 
 Organize your classes into Course groups? Try these helpers:
-- [Groups Restrict Categories](https://www.itthinx.com/plugins/groups-restrict-categories/)
 - [WP Term Images](https://wordpress.org/plugins/wp-term-images/)
 - [WP Term Order](https://wordpress.org/plugins/wp-term-order/)
 
