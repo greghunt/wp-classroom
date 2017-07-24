@@ -25,16 +25,7 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 	public static function init() {
 		if ( is_admin() ) {
 			add_action( 'woocommerce_product_write_panel_tabs', array( __CLASS__, 'product_write_panel_tabs' ) );
-
-			// Version check
-			//if(version_compare( WOOCOMMERCE_VERSION, '2.6.0', '>' ) )
-			//{
-				add_action( 'woocommerce_product_data_panels',	    array( __CLASS__, 'product_write_panels' ) );
-			//}else
-			//{
-			//	add_action( 'woocommerce_product_write_panels',	    array( __CLASS__, 'product_write_panels' ) );
-			//}
-			
+			add_action( 'woocommerce_product_data_panels',	    array( __CLASS__, 'product_write_panels' ) );
 			add_action( 'woocommerce_process_product_meta',	    array( __CLASS__, 'process_product_meta' ), 10, 2 );
 		}
 		add_filter( 'woocommerce_get_price_html', array( __CLASS__, 'woocommerce_get_price_html' ), 10, 2 );
@@ -342,12 +333,7 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 	public static function class_product_input() 
 	{
 		global $product;
-		//if(version_compare( WOOCOMMERCE_VERSION, '3.0.0', '>' ) )
-		//{
-			$id = $product->get_id();
-		//}else{
-		//	$id = $product->id;	
-		//}
+		$id = $product->get_id();
 		$duration = get_post_meta( $id, '_classroom_duration', true );
 		$duration_uom = get_post_meta( $id, '_classroom_duration_uom', true );
 		$courses = get_post_meta( $id, '_classroom_courses', true );
@@ -467,6 +453,8 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		if( in_array( $post->ID,$classes ) || $term_bought )
 		{
 			return $content;
+			WP_Classroom_User::forbidden(); // redirect
+			WP_Classroom_User::forbiddenMessage(); // forbidden message
 		}else
 		{
 			return $access_message;

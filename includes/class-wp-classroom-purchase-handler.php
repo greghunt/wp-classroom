@@ -68,34 +68,35 @@ class Groups_Classroom_Purchase_Handler {
 		$cus_id = $order->user_id;
 		$items = $order->get_items();
 		$user = new WP_User($cus_id);
+
+		//check is order is a course order
 		if(!WP_Classroom_Woocommerce_Purchase::is_course($order_id))
 			return;
+
 		foreach ($items as $l => $item)
 		{
-			$classes[] = $item['Classes'];
-			$courses[] = $item['Courses'];			
+			$classes[] = $item['Classes']; // create Array of classes
+			$courses[] = $item['Courses']; // create Array of lessons		
 		}
-		//var_dump($classes);
+		
 		$existing_classes = get_user_meta($user->ID , 'wp-classroom_mb_user_class_access' , true);
 		$existing_courses = get_user_meta($user->ID , 'wp-classroom_mb_user_course_access' , true);
+
 		if( $classes == null )
 		{
-			$classes = $existing_classes;
+			$classes = array_unique($existing_classes) ;
 		}else
 		{
-			$classes = $existing_classes.','.implode(',',$classes);
+			$classes = array_unique(array_merge($existing_classes , $classes));
 		}
 		if( $courses == null )
 		{
-			$courses = $existing_courses;
+			$courses = array_unique($existing_courses);
 		}else
 		{
-			$courses = $existing_courses.','.implode(',',$courses);
+			$courses = array_unique(array_merge($existing_courses , $courses));
 		}
-		$classes = explode(',',$classes);
-		$courses = explode(',',$courses);
-		//print_r($classes);
-		//die('dead');
+		
 		update_user_meta($user->ID , 'wp-classroom_mb_user_class_access' , $classes);
 		update_user_meta($user->ID , 'wp-classroom_mb_user_course_access' , $courses);
 	}
@@ -274,3 +275,5 @@ class Groups_Classroom_Purchase_Handler {
 		
 	}
 }
+$class_purchase_handler = new Groups_Classroom_Purchase_Handler(); //instantiaite the class
+$class_purchase_handler->init(); // actions and filters put into action
