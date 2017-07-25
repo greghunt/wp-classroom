@@ -217,6 +217,7 @@ class WP_Classroom_Public {
 	public function complete_class() {
 		// Handle request then generate response using WP_Ajax_Response
 		$user_id = get_current_user_id();
+
 		if( $user_id !== 0 && ( $id = $_POST['class_id'] ) && $_POST['course'] ) {
 			$courses = explode(',', $_POST['course']);
 			$completed_courses = $this->get_user_completed_courses($user_id);
@@ -233,10 +234,10 @@ class WP_Classroom_Public {
 			update_user_meta( $user_id, 'wp_classroom_completed', $completed_courses );
 		}
 
-		if( $_POST['redirect'] ) {
+		if( $_POST['redirect'] != "" ) {
 			$redirect = $_POST['redirect'];
-		} elseif( $_POST['return'] ) {
-			$redirect = $_POST['redirect'];
+		} elseif( $_POST['return'] != "" ) {
+			$redirect = $_POST['return'];
 		} else {
 			$redirect = home_url();
 		}
