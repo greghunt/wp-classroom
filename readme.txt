@@ -28,9 +28,9 @@ You have the option to use [Wistia](https://wistia.com) as a video provider. In 
 
 == Usage ==
 
-Most of the time, you'll want to sell private access to your classes. This can be accomplished by installing [Groups](https://en-ca.wordpress.org/plugins/groups/) and [WooCommerce](https://en-ca.wordpress.org/plugins/woocommerce/).
+Most of the time, you'll want to sell private access to your classes. This can be accomplished by installing [WooCommerce](https://en-ca.wordpress.org/plugins/woocommerce/). Then simply create a product and specify the classes or courses to which purchasing the product should grant access.
 
-Once installed, you can restrict access on a class or course basis by assigning them to a Group. Then, simply create a product and designate which Group they should be added to after purchase.
+If a user is not logged in or doesn't have access to your class or course, you can specify what page they should be redirected to. 
 
 == Shortcodes ==
 - [course_list]
