@@ -73,37 +73,32 @@ class Groups_Classroom_Purchase_Handler {
 		if(!WP_Classroom_Woocommerce_Purchase::is_course($order_id))
 			return;
 
-		$classes = '';
-		$courses = '';
-
-		foreach ($items as $key => $value)
+		foreach ($items as $l => $item)
 		{
-			$classes .= wc_get_order_item_meta($key,'Classes').',';
-			$courses .= wc_get_order_item_meta($key,'Courses').',';		
+			$classes[] = $item['Classes']; // create Array of classes
+			$courses[] = $item['Courses']; // create Array of lessons		
 		}
+		
+		$existing_classes = get_user_meta($user->ID , 'wp-classroom_mb_user_class_access' , true);
+		$existing_courses = get_user_meta($user->ID , 'wp-classroom_mb_user_course_access' , true);
 
-		$existing_classes = get_user_meta($user->ID , 'wp-classroom_mb_user_class_access', true );
-		$existing_courses = get_user_meta($user->ID , 'wp-classroom_mb_user_course_access', true );
-
-		if ( !empty($classes) )
+		if( $classes == null )
 		{
-			$classes = array_unique(explode(',',rtrim($classes,',')));
-			if ( !empty($existing_classes) )
-		    {
-		    	$classes = array_unique(array_merge($existing_classes,$classes));
-		    }
-		    update_user_meta($user->ID , 'wp-classroom_mb_user_class_access' , $classes);
+			$classes = array_unique($existing_classes) ;
+		}else
+		{
+			$classes = array_unique(array_merge($existing_classes , $classes));
 		}
-
-		if ( !empty($courses) )
+		if( $courses == null )
 		{
-			$courses = array_unique(explode(',',rtrim($courses,',')));
-			if ( !empty($existing_courses) )
-		    {
-		    	$courses = array_unique(array_merge($existing_courses,$courses));
-		    }
-		    update_user_meta($user->ID , 'wp-classroom_mb_user_course_access' , $courses);
-		}      
+			$courses = array_unique($existing_courses);
+		}else
+		{
+			$courses = array_unique(array_merge($existing_courses , $courses));
+		}
+		
+		update_user_meta($user->ID , 'wp-classroom_mb_user_class_access' , $classes);
+		update_user_meta($user->ID , 'wp-classroom_mb_user_course_access' , $courses);
 	}
 	
 	/**
