@@ -4,7 +4,7 @@ Donate link: https://freshbrewedweb.com
 Tags: classroom, education, school, woocommerce
 Requires at least: 3.7
 Tested up to: 4.8
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 
