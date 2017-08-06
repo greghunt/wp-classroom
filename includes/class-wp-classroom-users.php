@@ -65,9 +65,10 @@ class WP_Classroom_User {
 	 * @return [type] [description]
 	 */
 	private function class_accessible() {
+		$classes = array_intersect($this->get_class_courses(), $this->access['courses']);
 		return
-			in_array( $this->get_class(), $this->access['classes'] ) ||
-			!empty(array_intersect($this->get_class_courses(), $this->access['courses']));
+			in_array( $this->get_class(), $this->access['classes'] ) || 
+			!empty($classes);
 	}
 
 	private function course_accessible() {
@@ -105,7 +106,7 @@ class WP_Classroom_User {
 		} elseif( $globalRedirect = $this->getOption('unauthorized-redirect') ) {
 			$url = get_permalink($globalRedirect);
 		}
-		
+
 		wp_redirect($url);
 	}
 
