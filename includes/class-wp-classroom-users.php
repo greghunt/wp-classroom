@@ -67,7 +67,7 @@ class WP_Classroom_User {
 	private function class_accessible() {
 		$classes = array_intersect($this->get_class_courses(), $this->access['courses']);
 		return
-			in_array( $this->get_class(), $this->access['classes'] ) || 
+			in_array( $this->get_class(), $this->access['classes'] ) ||
 			!empty($classes);
 	}
 

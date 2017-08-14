@@ -88,44 +88,44 @@ class WP_Classroom {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-loader.php';
+		require_once WP_CLASSROOM_PLUGIN_DIR . 'includes/class-wp-classroom-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-i18n.php';
+		require_once WP_CLASSROOM_PLUGIN_DIR . 'includes/class-wp-classroom-i18n.php';
 
 		/**
 		 * The class responsible for user restriction and access
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-users.php';
+		require_once WP_CLASSROOM_PLUGIN_DIR . 'includes/class-wp-classroom-users.php';
 
 		/**
 		 * The class responsible for classroom videos
 		 */
-		 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-video.php';
+		 require_once WP_CLASSROOM_PLUGIN_DIR . 'includes/class-wp-classroom-video.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-classroom-admin.php';
+		require_once WP_CLASSROOM_PLUGIN_DIR . 'admin/class-wp-classroom-admin.php';
 
 		/**
 		 * The class responsible for loading template views
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-template-loader.php';
+		require_once WP_CLASSROOM_PLUGIN_DIR . 'includes/class-wp-classroom-template-loader.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-classroom-public.php';
+		require_once WP_CLASSROOM_PLUGIN_DIR . 'public/class-wp-classroom-public.php';
 
 		/**
 		 * The class responsible for purchasing integration.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-purchase-handler.php';
+		require_once WP_CLASSROOM_PLUGIN_DIR . 'includes/class-wp-classroom-purchase-handler.php';
 
 
 		$this->loader = new WP_Classroom_Loader();
