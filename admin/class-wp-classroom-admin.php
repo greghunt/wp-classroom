@@ -443,6 +443,29 @@ class WP_Classroom_Admin {
 			'options' => $this->classOptions()
 		) );
 
+		$cmb_user->add_field( array(
+			'name'    => __( 'Teacher', $this->plugin_name ),
+			'id'      => $prefix . 'teacher',
+			'type'    => 'title',
+			'show_on_cb' => array($this, 'show_only_for_teachers')
+		) );
+
+		$cmb_user->add_field( array(
+			'name'    => __( 'Title', $this->plugin_name ),
+			'id'      => $prefix . 'teacher_title',
+			'type'    => 'text',
+			'show_on_cb' => array($this, 'show_only_for_teachers')
+		) );
+
+	}
+
+	/**
+	 * Only display a metabox for teachers
+	 * @param  object $cmb CMB2 object
+	 * @return bool        True/false whether to show the metabox
+	 */
+	function show_only_for_teachers( $user ) {
+		return user_can( $user->object_id(), 'can_teach' );
 	}
 
 	/**

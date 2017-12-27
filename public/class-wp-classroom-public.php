@@ -102,6 +102,16 @@ class WP_Classroom_Public {
 
 	}
 
+	//Template for Teacher
+	public function get_teacher_template($single_template) {
+
+		if( $username = get_query_var( 'teacher_username', false ) ) {
+			$single_template = $this->get_template_path( 'teacher' );
+		}
+
+		return $single_template;
+	}
+
 
 	/**
 	 * Register the stylesheets for the public-facing side of the site.

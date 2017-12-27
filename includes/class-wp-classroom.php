@@ -97,6 +97,11 @@ class WP_Classroom {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-i18n.php';
 
 		/**
+		 * Extended WP_User for teachers
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-teacher.php';
+
+		/**
 		 * The class responsible for user restriction and access
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-users.php';
@@ -203,6 +208,7 @@ class WP_Classroom {
 	private function define_public_hooks() {
 
 		$plugin_public = new WP_Classroom_Public( $this->get_WP_Classroom(), $this->get_version() );
+		$user_public = new WP_Classroom_User( $this->get_WP_Classroom(), $this->get_version() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
@@ -216,6 +222,13 @@ class WP_Classroom {
 
 		$this->loader->add_action( 'init', $plugin_public, 'register_shortcodes' );
 		$this->loader->add_action( 'init', $plugin_public, 'add_email_to_url' );
+
+		$this->loader->add_action( 'init', $user_public, 'teacher_profile_route' );
+		$this->loader->add_action( 'init', $user_public, 'custom_rewrite_tags' );
+		$this->loader->add_filter( 'parse_request', $user_public, 'custom_request' );
+		$this->loader->add_filter( 'template_include', $plugin_public, 'get_teacher_template' );
+
+
 		$this->loader->add_action( 'wp_ajax_complete_class', $plugin_public, 'complete_class' );
 		$this->loader->add_action( 'template_redirect', $plugin_public, 'restrict_access' );
 
