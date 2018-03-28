@@ -13,10 +13,12 @@
  */
 ?>
 <?php
-    $video = get_post_meta(get_the_ID(), 'wp_classroom_video', TRUE);
-	$videoEmbed = wp_oembed_get( $video );
+
+$student = wp_classroom_student();
+$class = wp_classroom_class();
+
+get_header();
 ?>
-<?php get_header(); ?>
 
 <?php
 
@@ -55,7 +57,7 @@ switch ( $template ) {
 		<article <?php post_class(); ?>>
 			<header>
 				<h1 class="entry-title"><?php the_title(); ?></h1>
-
+				<p>Logged in as: <?php echo $student->get_user()->user_nicename ?></p>
 				<div class="wpclr-class__actions">
 					<?php if($next = get_next_post()): ?>
 						<a href="<?php echo get_permalink($next->ID) ?>"><?php _e('Skip Class', 'wp-classroom') ?></a>
@@ -80,9 +82,7 @@ switch ( $template ) {
 				</header>
 
 				<div class="wpclr-class__multimedia">
-					<?php
-					echo $videoEmbed;
-					?>
+					<?php echo $class->videoEmbed(); ?>
 				</div>
 				<nav class="class-course-nav">
 					<?= apply_filters( 'courses', NULL) ?>

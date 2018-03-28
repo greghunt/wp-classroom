@@ -35,7 +35,7 @@ class WP_Classroom_Template_Loader extends Gamajo_Template_Loader {
 	 * @since 1.0.0
 	 * @type string
 	 */
-	protected $theme_template_directory = 'classroom';
+	protected $theme_template_directory = 'wp-classroom';
 
 	/**
 	 * Reference to the root directory path of this plugin.

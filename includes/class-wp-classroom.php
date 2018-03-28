@@ -56,7 +56,7 @@ class WP_Classroom {
 	public function __construct() {
 
 		$this->WP_Classroom = 'wp-classroom';
-		$this->version = '1.0.0';
+		$this->version = '2.0.0';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -128,9 +128,19 @@ class WP_Classroom {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-classroom-public.php';
 
 		/**
+		 * Helpers for the classroom
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-class.php';
+
+		/**
 		 * The class responsible for purchasing integration.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-purchase-handler.php';
+
+		/**
+		 * Helper template functions
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/helpers.php';
 
 
 		$this->loader = new WP_Classroom_Loader();

@@ -14,6 +14,7 @@ trait WP_Classroom_Shortcodes {
 		add_shortcode( 'complete_class', array( $this, 'complete_class_shortcode' ) );
 		add_shortcode( 'course_progress', array( $this, 'course_progress_shortcode' ) );
 		add_shortcode( 'classroom_login', array( $this, 'classroom_login_shortcode' ) );
+		add_shortcode( 'course_show', array( $this, 'course_show_shortcode' ) );
 	} // register_shortcodes()
 
 
@@ -113,6 +114,29 @@ trait WP_Classroom_Shortcodes {
 		$html .= '</figure>';
 
 		return $html;
+	} // shortcode()
+
+	/**
+	 * Include content for specific courses
+	 *
+	 * @param   array	$atts		The attributes from the shortcode
+	 *
+	 * @return	str	$html		Output the HTML
+	 */
+	public function course_show_shortcode( $atts, $content = NULL ) {
+		$defaults['in'] = null;
+		$defaults['not'] = null;
+		$args = shortcode_atts( $defaults, $atts, 'course_show' );
+		extract($args);
+
+		$in = explode(',', trim($in));
+		$not = explode(',', trim($not));
+
+		$student = wp_classroom_student();
+
+		if( $student->belongs_to_course($in) && !$student->belongs_to_course($not) ) {
+			return $content;
+		}
 	} // shortcode()
 
 	/**

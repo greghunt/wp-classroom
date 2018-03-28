@@ -43,6 +43,10 @@ class WP_Classroom_User
         }
     }
 
+    public function get_user() {
+      return wp_get_current_user();
+    }
+
     public function can_access()
     {
         global $post;
@@ -51,7 +55,7 @@ class WP_Classroom_User
         if( $post->post_author == $this->user->ID )
           return TRUE;
 
-        $this->access = $this->set_access();
+        $this->set_access();
 
         if (is_post_type_archive( WP_CLASSROOM_CLASS_POST_TYPE )) {
             $this->message = __("You shouldn't access this archive");
@@ -64,7 +68,17 @@ class WP_Classroom_User
         }
 
         $this->message = __("You shouldn't access this class");
+
         return $this->class_accessible();
+    }
+
+    public function belongs_to_course( $courses )
+    {
+      $course_ids = [];
+      foreach( $courses as $slug )
+        $course_ids[] = $this->get_course_id_by_slug( $slug );
+
+      return $this->course_accessible( $course_ids );
     }
 
     /**
@@ -82,9 +96,23 @@ class WP_Classroom_User
             !empty($classes);
     }
 
-    private function course_accessible()
+    private function get_course_id_by_slug( $slug )
     {
-        return in_array( $this->get_course(), $this->access['courses'] );
+      return get_term_by('slug', $slug, 'wp_course')->term_id;
+    }
+
+    private function course_accessible( $course = null )
+    {
+        $this->user = wp_get_current_user();
+        $this->set_access();
+
+        if( $course == null )
+          $course = $this->get_course();
+
+        if( is_array($course) )
+          return array_intersect( $course, $this->access['courses'] ) == $course;
+
+        return in_array( $course, $this->access['courses'] );
     }
 
     private function default_user_meta($key = null)
@@ -133,7 +161,10 @@ class WP_Classroom_User
 
     private function set_access()
     {
-        return array(
+        if( !is_null($this->access) )
+          return;
+
+        $this->access = array(
             'classes' => is_user_logged_in() ? get_user_meta($this->user->ID, $this->class_access_key, true) : $this->default_user_meta('classes'),
             'courses' => is_user_logged_in() ? get_user_meta($this->user->ID, $this->course_access_key, true) : $this->default_user_meta('courses'),
         );
