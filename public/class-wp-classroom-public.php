@@ -321,9 +321,14 @@ class WP_Classroom_Public {
 	 * @param array $classes Array of classes
 	 */
 	public function add_body_class($classes) {
+
 	  if ( $this->is_classroom() ) {
 	      $classes[] = get_post_type();
 	  }
+
+		if( get_query_var('teacher') != '' ) {
+				$classes[] = 'wp-classroom-teacher';
+		}
 
 	  return $classes;
 	}

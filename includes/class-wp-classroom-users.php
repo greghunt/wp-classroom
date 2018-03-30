@@ -58,8 +58,8 @@ class WP_Classroom_User
         $this->set_access();
 
         if (is_post_type_archive( WP_CLASSROOM_CLASS_POST_TYPE )) {
-            $this->message = __("You shouldn't access this archive");
-            return false;
+            // $this->message = __("You shouldn't access this archive");
+            return true;
         }
 
         if (is_tax( WP_CLASSROOM_COURSE_TAXONOMY )) {
@@ -258,6 +258,19 @@ class WP_Classroom_User
                 $role->add_cap('can_teach', true);
             }
         }
+    }
+
+    public static function get_teachers()
+    {
+      global $wpdb;
+  		$users = $wpdb->get_results("SELECT post_author, count(*) AS post_count FROM wp_posts WHERE post_type =
+  		'wp_classroom' GROUP BY post_author ORDER BY post_count DESC");
+      $teachers = array();
+      foreach( $users as $user ) {
+        $teachers[] = get_user_by('id', $user->post_author);
+      }
+
+      return $teachers;
     }
 
     public function teacher_profile_route()

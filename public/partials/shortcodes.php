@@ -15,6 +15,7 @@ trait WP_Classroom_Shortcodes {
 		add_shortcode( 'course_progress', array( $this, 'course_progress_shortcode' ) );
 		add_shortcode( 'classroom_login', array( $this, 'classroom_login_shortcode' ) );
 		add_shortcode( 'course_show', array( $this, 'course_show_shortcode' ) );
+		add_shortcode( 'classroom_breadcrumb', array( $this, 'classroom_breadcrumb_shortcode' ) );
 	} // register_shortcodes()
 
 
@@ -286,6 +287,18 @@ trait WP_Classroom_Shortcodes {
 		) );
 		return $html;
 
+	}
+
+	/**
+	 * Classroom breadcrumb
+	 */
+	public function classroom_breadcrumb_shortcode( $atts ) {
+		$defaults['submenu'] = false;
+		$args	= shortcode_atts( $defaults, $atts, 'classroom_breadcrumb' );
+
+		if ( function_exists('yoast_breadcrumb') ) {
+			yoast_breadcrumb("<div class=\"{$this->prefix}-breadcrumb\">","</div>");
+		}
 	}
 
 }

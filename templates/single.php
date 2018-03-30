@@ -58,6 +58,8 @@ switch ( $template ) {
 			<header>
 				<h1 class="entry-title"><?php the_title(); ?></h1>
 				<p>Logged in as: <?php echo $student->get_user()->user_nicename ?></p>
+				<?= apply_filters('classroom_breadcrumb', null, []) ?>
+
 				<div class="wpclr-class__actions">
 					<?php if($next = get_next_post()): ?>
 						<a href="<?php echo get_permalink($next->ID) ?>"><?php _e('Skip Class', 'wp-classroom') ?></a>

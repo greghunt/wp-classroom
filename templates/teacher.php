@@ -52,20 +52,20 @@ switch ($template) {
         <?php if ($teacher) : ?>
         <article <?php post_class(); ?>>
             <header>
-                <h1 class="entry-title">Teacher: <?php echo $teacher->user_nicename ?></h1>
+                <h1 class="entry-title"><?php _e('Teacher', 'wp-classroom') ?>: <?php echo $teacher->display_name ?></h1>
 								<h2><?php echo $teacher->getMeta('title') ?></h2>
 								<?php echo get_the_author_meta( 'description', $teacher->ID ); ?>
             </header>
 
             <div class="entry-content">
-                <h2>Classes</h2>
+                <h2><?php _e('Classes', 'wp-classroom') ?></h2>
                 <?php foreach ($teacher->getClasses() as $class) : ?>
                 <h3><a href="<?php echo get_permalink($class->ID) ?>"><?php echo $class->post_title ?></a></h3>
                 <?php endforeach; ?>
             </div>
         </article>
         <?php else : ?>
-        <h1>User, <?php echo ucfirst(get_query_var('teacher_username')) ?>, is not a teacher.</h1>
+        <h1><?php sprintf('User, %s, not a teacher.', ucfirst(get_query_var('teacher_username'))) ?></h1>
         <?php endif; ?>
     </div>
 
