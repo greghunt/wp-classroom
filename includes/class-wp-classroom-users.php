@@ -51,6 +51,11 @@ class WP_Classroom_User
     {
         global $post;
         $this->user = wp_get_current_user();
+
+        // Authors can see their own posts.
+        if( in_array( 'administrator', (array) $this->user->roles ) )
+          return TRUE;
+
         // Authors can see their own posts.
         if( $post->post_author == $this->user->ID )
           return TRUE;
