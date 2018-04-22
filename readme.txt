@@ -4,7 +4,7 @@ Donate link: https://freshbrewedweb.com
 Tags: classroom, education, school, woocommerce
 Requires at least: 3.7
 Tested up to: 4.9
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -50,18 +50,20 @@ This plugin was made to be particularly customizable and not too opinionated. To
 
 == Upgrade Notice ==
 
-= 2.0.0 =
-We moved to our own access restriction system. Previously, we recommended users to use Groups plugin. This is no longer needed.
 
 = 1.0 =
 Hello, this is the first version.
 
 == Changelog ==
 
+= 2.0.4 =
+* Fixed bug with purchase handler not adding access.
+
 = 2.0.1 =
 * Fixed PHP version compatibility
 
 = 2.0.0 =
+* We moved to our own access restriction system. Previously, we recommended users to use Groups plugin. This is no longer needed.
 * Removed Wistia integration
 * Added redirect settings
 * Replaced Groups plugin dependency
