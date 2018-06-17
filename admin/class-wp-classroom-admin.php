@@ -281,6 +281,34 @@ class WP_Classroom_Admin {
 	}
 
 	/**
+	 * Associates the Course with Teachers
+	 * @uses CMB2
+	 * @return [type] [description]
+	 */
+	function associate_course_teachers() {
+
+		$prefix = '_wp_course_';
+
+		/**
+		 * Metabox to be displayed on a single page ID
+		 */
+		$cmb_term = new_cmb2_box( array(
+			'id'               => $prefix . 'edit', 
+ 			'title'            => esc_html__( 'Course Teachers', 'cmb2' ), // Doesn't output for term boxes 
+ 			'object_types'     => array( 'term' ), // Tells CMB2 to use term_meta vs post_meta 
+ 			'taxonomies'       => array( 'wp_course' ), // Tells CMB2 which taxonomies should have these fields 
+		) );
+
+		$cmb_term->add_field( array(
+			'name'     => __( 'Teachers', $this->plugin_name ),
+			'id'       => $prefix . 'teacher',
+			'type'    => 'multicheck',
+			'select_all_button' => false,
+			'options' => $this->teacherOptions(),
+		) );
+	}
+
+	/**
 	* add order column to admin listing screen for classes
 	*/
 	function add_new_classes_column($columns) {
@@ -477,6 +505,18 @@ class WP_Classroom_Admin {
 		return wp_list_pluck( $terms, 'name', 'term_id' );
 	}
 
+	private function teacherOptions() {
+		$users = get_users();
+		$teachers = [];
+
+		foreach ($users as $user) {
+			if($user->roles[0] == "teacher") {
+				$teachers[$user->ID] = $user->display_name;
+			}
+		}
+
+		return $teachers;
+	}
 	/**
 	 * Get Class Options for select field.
 	 * @return [type] [description]

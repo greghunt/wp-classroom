@@ -190,6 +190,7 @@ class WP_Classroom {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
 		$this->loader->add_action( 'cmb2_admin_init', $plugin_admin, 'classroom_register_metabox' );
+		$this->loader->add_action( 'cmb2_admin_init', $plugin_admin, 'associate_course_teachers' );
 
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'init' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_options_page' );
