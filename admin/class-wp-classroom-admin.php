@@ -508,13 +508,13 @@ class WP_Classroom_Admin {
 	private function teacherOptions() {
 		$users = get_users();
 		$teachers = [];
-
+		
 		foreach ($users as $user) {
-			if($user->roles[0] == "teacher") {
+			if($user->roles[0] == "teacher" || $user->roles[0] == "administrator" ) {
 				$teachers[$user->ID] = $user->display_name;
 			}
 		}
-
+		
 		return $teachers;
 	}
 	/**
