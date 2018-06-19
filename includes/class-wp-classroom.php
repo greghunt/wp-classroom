@@ -56,7 +56,7 @@ class WP_Classroom {
 	public function __construct() {
 
 		$this->WP_Classroom = 'wp-classroom';
-		$this->version = '2.0.0';
+		$this->version = WP_CLASSROOM_VERSION;
 
 		$this->load_dependencies();
 		$this->set_locale();

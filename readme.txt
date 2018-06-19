@@ -56,6 +56,9 @@ Hello, this is the first version.
 
 == Changelog ==
 
+= 2.1.4 =
+* Added Teachers to Courses
+
 = 2.0.4 =
 * Fixed bug with purchase handler not adding access.
 
