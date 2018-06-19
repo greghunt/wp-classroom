@@ -14,7 +14,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'WP_CLASSROOM_VERSION', '2.1.4' );
+define( 'WP_CLASSROOM_VERSION', '2.1.5' );
 define( 'WP_CLASSROOM_NAMESPACE', 'wp-classroom' );
 define( 'WP_CLASSROOM_CLASS_POST_TYPE', 'wp_classroom' );
 define( 'WP_CLASSROOM_COURSE_TAXONOMY', 'wp_course' );
