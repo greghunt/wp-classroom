@@ -164,9 +164,11 @@ class CMB2_Option {
 	 * @return bool           Success/Failure
 	 */
 	public function set( $options = array() ) {
-		$this->options = ! empty( $options ) || empty( $options ) && empty( $this->key )
-			? $options
-			: $this->options;
+		if ( ! empty( $options ) || empty( $options ) && empty( $this->key ) ) {
+			$this->options = $options;
+		}
+
+		$this->options = wp_unslash( $this->options ); // get rid of those evil magic quotes
 
 		if ( empty( $this->key ) ) {
 			return false;
@@ -175,11 +177,27 @@ class CMB2_Option {
 		$test_save = apply_filters( "cmb2_override_option_save_{$this->key}", 'cmb2_no_override_option_save', $this->options, $this );
 
 		if ( 'cmb2_no_override_option_save' !== $test_save ) {
+			// If override, do not proceed to update the option, just return result.
 			return $test_save;
 		}
 
-		// If no override, update the option
-		return update_option( $this->key, $this->options );
+		/**
+		 * Whether to auto-load the option when WordPress starts up.
+		 *
+		 * The dynamic portion of the hook name, $this->key, refers to the option key.
+		 *
+		 * @since 2.4.0
+		 *
+		 * @param bool        $autoload   Whether to load the option when WordPress starts up.
+		 * @param CMB2_Option $cmb_option This object.
+		 */
+		$autoload = apply_filters( "cmb2_should_autoload_{$this->key}", true, $this );
+
+		return update_option(
+			$this->key,
+			$this->options,
+			! $autoload || 'no' === $autoload ? false : true
+		);
 	}
 
 	/**
@@ -205,7 +223,9 @@ class CMB2_Option {
 			}
 		}
 
-		return (array) $this->options;
+		$this->options = (array) $this->options;
+
+		return $this->options;
 	}
 
 }

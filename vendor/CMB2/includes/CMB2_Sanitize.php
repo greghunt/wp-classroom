@@ -37,7 +37,7 @@ class CMB2_Sanitize {
 	 */
 	public function __construct( CMB2_Field $field, $value ) {
 		$this->field = $field;
-		$this->value = stripslashes_deep( $value ); // get rid of those evil magic quotes
+		$this->value = $value;
 	}
 
 	/**
@@ -57,17 +57,18 @@ class CMB2_Sanitize {
 	 * @since  1.0.2
 	 */
 	public function default_sanitization() {
+		$field_type = $this->field->type();
 
 		/**
 		 * This exists for back-compatibility, but validation
 		 * is not what happens here.
 		 *
-		 * @deprecated See documentation for "cmb2_sanitize_{$this->type()}".
+		 * @deprecated See documentation for "cmb2_sanitize_{$field_type}".
 		 */
 		if ( function_exists( 'apply_filters_deprecated' ) ) {
-			$override_value = apply_filters_deprecated( "cmb2_validate_{$this->field->type()}", array( null, $this->value, $this->field->object_id, $this->field->args(), $this ), '2.0.0', "cmb2_sanitize_{$this->field->type()}" );
+			$override_value = apply_filters_deprecated( "cmb2_validate_{$field_type}", array( null, $this->value, $this->field->object_id, $this->field->args(), $this ), '2.0.0', "cmb2_sanitize_{$field_type}" );
 		} else {
-			$override_value = apply_filters( "cmb2_validate_{$this->field->type()}", null, $this->value, $this->field->object_id, $this->field->args(), $this );
+			$override_value = apply_filters( "cmb2_validate_{$field_type}", null, $this->value, $this->field->object_id, $this->field->args(), $this );
 		}
 
 		if ( null !== $override_value ) {
@@ -75,7 +76,7 @@ class CMB2_Sanitize {
 		}
 
 		$sanitized_value = '';
-		switch ( $this->field->type() ) {
+		switch ( $field_type ) {
 			case 'wysiwyg':
 			case 'textarea_small':
 			case 'oembed':
@@ -131,7 +132,7 @@ class CMB2_Sanitize {
 			CMB2_Utils::log_if_debug( __METHOD__, __LINE__, "{$this->field->type()} {$this->field->_id()} is missing the 'taxonomy' parameter." );
 		} else {
 
-			if ( 'options-page' === $this->field->object_type ) {
+			if ( in_array( $this->field->object_type, array( 'options-page', 'term' ), true ) ) {
 				$return_values = true;
 			} else {
 				wp_set_object_terms( $this->field->object_id, $this->value, $this->field->args( 'taxonomy' ) );
@@ -245,6 +246,10 @@ class CMB2_Sanitize {
 		$search = array( $wp_locale->number_format['thousands_sep'], $wp_locale->number_format['decimal_point'] );
 		$replace = array( '', '.' );
 
+		// Strip slashes. Example: 2\'180.00.
+		// See https://github.com/CMB2/CMB2/issues/1014
+		$this->value = wp_unslash( $this->value );
+
 		// for repeatable
 		if ( is_array( $this->value ) ) {
 			foreach ( $this->value as $key => $val ) {
@@ -266,6 +271,9 @@ class CMB2_Sanitize {
 	 * @return string Timestring
 	 */
 	public function text_date_timestamp() {
+		// date_create_from_format if there is a slash in the value.
+		$this->value = wp_unslash( $this->value );
+
 		return is_array( $this->value )
 			? array_map( array( $this->field, 'get_timestamp_from_value' ), $this->value )
 			: $this->field->get_timestamp_from_value( $this->value );
@@ -278,6 +286,8 @@ class CMB2_Sanitize {
 	 * @return string|array Timestring
 	 */
 	public function text_datetime_timestamp( $repeat = false ) {
+		// date_create_from_format if there is a slash in the value.
+		$this->value = wp_unslash( $this->value );
 
 		$test = is_array( $this->value ) ? array_filter( $this->value ) : '';
 		if ( empty( $test ) ) {
@@ -313,6 +323,9 @@ class CMB2_Sanitize {
 		if ( empty( $test ) ) {
 			return '';
 		}
+
+		// date_create_from_format if there is a slash in the value.
+		$this->value = wp_unslash( $this->value );
 
 		$utc_key = $this->field->_id() . '_utc';
 
@@ -359,8 +372,8 @@ class CMB2_Sanitize {
 			if ( ! is_object( $datetime ) ) {
 				$this->value = $utc_stamp = '';
 			} else {
-				$timestamp   = $datetime->setTimezone( new DateTimeZone( $tzstring ) )->getTimestamp();
-				$utc_stamp   = $timestamp - $offset;
+				$datetime->setTimezone( new DateTimeZone( $tzstring ) );
+				$utc_stamp   = date_timestamp_get( $datetime ) - $offset;
 				$this->value = serialize( $datetime );
 			}
 
@@ -474,6 +487,10 @@ class CMB2_Sanitize {
 		// If there is no ID saved yet, try to get it from the url
 		if ( $this->value && ! $id_val ) {
 			$id_val = CMB2_Utils::image_id_from_url( $this->value );
+
+		// If there is an ID but user emptied the input value, remove the ID.
+		} elseif ( ! $this->value && $id_val ) {
+			$id_val = null;
 		}
 
 		return $id_field->save_field( $id_val );
