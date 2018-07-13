@@ -3,7 +3,7 @@
 * Plugin Name: Classroom
 * Author: Fresh Brewed Web
 * Author URI: https://freshbrewedweb.com
-* Version: 2.1.6
+* Version: 2.1.7
 * Description: Create a digital video based classroom in WordPress. This plugin gives you the ability to publish classes. It's flexible enough to combine with other well known WordPress plugins to enhance the functionality.
 * Tags: classroom, education, school, woocommerce, video
 * License: GPL v3 or later
@@ -14,7 +14,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'WP_CLASSROOM_VERSION', '2.1.6' );
+define( 'WP_CLASSROOM_VERSION', '2.1.7' );
 define( 'WP_CLASSROOM_NAMESPACE', 'wp-classroom' );
 define( 'WP_CLASSROOM_CLASS_POST_TYPE', 'wp_classroom' );
 define( 'WP_CLASSROOM_COURSE_TAXONOMY', 'wp_course' );

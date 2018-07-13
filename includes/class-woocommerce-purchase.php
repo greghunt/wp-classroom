@@ -447,9 +447,8 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 				break;
 			}
 		}
-		//var_dump(WP_Classroom_Woocommerce_Purchase::get_user_classes());
 
-		//$classes = explode(',',$classes);
+		$classes = explode(',',$classes);
 		if( in_array( $post->ID,$classes ) || $term_bought )
 		{
 			return $content;
