@@ -41,11 +41,11 @@ class Groups_Classroom_Purchase_Handler {
 		// >= 2.x
 
 		// do_action( 'woocommerce_subscription_status_updated', $this, $new_status, $old_status );
-		add_action( 'woocommerce_subscription_status_updated', array( __CLASS__, 'woocommerce_subscription_status_updated' ), 10, 3 );
+//		add_action( 'woocommerce_subscription_status_updated', array( __CLASS__, 'woocommerce_subscription_status_updated' ), 10, 3 );
 		// do_action( 'woocommerce_subscription_trashed', $post_id );
-		add_action( 'woocommerce_subscription_trashed', array( __CLASS__, 'woocommerce_subscription_trashed' ), 10, 1 );
+//		add_action( 'woocommerce_subscription_trashed', array( __CLASS__, 'woocommerce_subscription_trashed' ), 10, 1 );
 		// do_action( 'woocommerce_subscriptions_switched_item', $subscription, $new_order_item, WC_Subscriptions_Order::get_item_by_id( $new_order_item['switched_subscription_item_id'] ) );
-		add_action( 'woocommerce_subscriptions_switched_item', array( __CLASS__, 'woocommerce_subscriptions_switched_item' ), 10, 3 );
+//		add_action( 'woocommerce_subscriptions_switched_item', array( __CLASS__, 'woocommerce_subscriptions_switched_item' ), 10, 3 );
 
 		add_action( 'woocommerce_scheduled_subscription_end_of_prepaid_term', array( __CLASS__, 'woocommerce_scheduled_subscription_end_of_prepaid_term' ), 10, 1 );
 

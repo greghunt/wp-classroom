@@ -450,7 +450,7 @@ class WP_Classroom_Woocommerce_Purchase implements WP_Classroom_Purchase {
 		//var_dump(WP_Classroom_Woocommerce_Purchase::get_user_classes());
 
 		//$classes = explode(',',$classes);
-		if( !empty($classes) && in_array( $post->ID,$classes ) || $term_bought )
+		if( in_array( $post->ID,$classes ) || $term_bought )
 		{
 			return $content;
 			WP_Classroom_User::forbidden(); // redirect
