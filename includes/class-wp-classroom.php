@@ -56,7 +56,7 @@ class WP_Classroom {
 	public function __construct() {
 
 		$this->WP_Classroom = 'wp-classroom';
-		$this->version = '1.0.0';
+		$this->version = WP_CLASSROOM_VERSION;
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -88,44 +88,59 @@ class WP_Classroom {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once WP_CLASSROOM_PLUGIN_DIR . 'includes/class-wp-classroom-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once WP_CLASSROOM_PLUGIN_DIR . 'includes/class-wp-classroom-i18n.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-i18n.php';
+
+		/**
+		 * Extended WP_User for teachers
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-teacher.php';
 
 		/**
 		 * The class responsible for user restriction and access
 		 */
-		require_once WP_CLASSROOM_PLUGIN_DIR . 'includes/class-wp-classroom-users.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-users.php';
 
 		/**
 		 * The class responsible for classroom videos
 		 */
-		 require_once WP_CLASSROOM_PLUGIN_DIR . 'includes/class-wp-classroom-video.php';
+		 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-video.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once WP_CLASSROOM_PLUGIN_DIR . 'admin/class-wp-classroom-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-classroom-admin.php';
 
 		/**
 		 * The class responsible for loading template views
 		 */
-		require_once WP_CLASSROOM_PLUGIN_DIR . 'includes/class-wp-classroom-template-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-template-loader.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once WP_CLASSROOM_PLUGIN_DIR . 'public/class-wp-classroom-public.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-classroom-public.php';
+
+		/**
+		 * Helpers for the classroom
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-class.php';
 
 		/**
 		 * The class responsible for purchasing integration.
 		 */
-		require_once WP_CLASSROOM_PLUGIN_DIR . 'includes/class-wp-classroom-purchase-handler.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-classroom-purchase-handler.php';
+
+		/**
+		 * Helper template functions
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/helpers.php';
 
 
 		$this->loader = new WP_Classroom_Loader();
@@ -175,6 +190,7 @@ class WP_Classroom {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
 		$this->loader->add_action( 'cmb2_admin_init', $plugin_admin, 'classroom_register_metabox' );
+		$this->loader->add_action( 'cmb2_admin_init', $plugin_admin, 'associate_course_teachers' );
 
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'init' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_options_page' );
@@ -203,6 +219,7 @@ class WP_Classroom {
 	private function define_public_hooks() {
 
 		$plugin_public = new WP_Classroom_Public( $this->get_WP_Classroom(), $this->get_version() );
+		$user_public = new WP_Classroom_User( $this->get_WP_Classroom(), $this->get_version() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
@@ -216,6 +233,13 @@ class WP_Classroom {
 
 		$this->loader->add_action( 'init', $plugin_public, 'register_shortcodes' );
 		$this->loader->add_action( 'init', $plugin_public, 'add_email_to_url' );
+
+		$this->loader->add_action( 'init', $user_public, 'teacher_profile_route' );
+		$this->loader->add_action( 'init', $user_public, 'custom_rewrite_tags' );
+		$this->loader->add_filter( 'parse_request', $user_public, 'custom_request' );
+		$this->loader->add_filter( 'template_include', $plugin_public, 'get_teacher_template' );
+
+
 		$this->loader->add_action( 'wp_ajax_complete_class', $plugin_public, 'complete_class' );
 		$this->loader->add_action( 'template_redirect', $plugin_public, 'restrict_access' );
 
