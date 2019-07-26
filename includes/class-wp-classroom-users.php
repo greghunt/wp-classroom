@@ -149,17 +149,28 @@ class WP_Classroom_User
     {
         global $post;
         $url = wp_login_url();
-        $all_terms = get_the_terms($post->ID, get_taxonomies())[0];
-        $course_id = $all_terms->parent ? $all_terms->parent : $all_terms->term_id;
+
+        // remove get_taxonomies();
+        $terms = get_the_terms($post->ID, 'wp_course');
+        $terms_array = [];
         
-        if ($postRedirect = get_post_meta($post->ID, 'wp_classroom_redirect', true)) {
-            $url = get_permalink($postRedirect);
-        }  elseif ($courseRedirect = get_term_meta( $course_id, '_wp_course_course_redirect', true )) {
-            $url = $courseRedirect;
-        }  elseif ($globalRedirect = $this->getOption('unauthorized-redirect')) {
-            $url = get_permalink($globalRedirect);
+        // push all redirect links to $terms_array[]. Only add to array if there is a link in that field
+        foreach ($terms as $term) {
+            $term = get_term_meta($term->term_id, '_wp_course_course_redirect', true);
+            if ($term) {
+                array_push($terms_array, $term); 
+            }
         }
 
+        if ($postRedirect = get_post_meta($post->ID, 'wp_classroom_redirect', true)) {
+            $url = get_permalink($postRedirect);
+        } // we can obviously only redirect once, and since the above array descends from parent to child, we want to give the lowest level descendent priority over its ancestors. 
+        elseif ($taxonomyRedirect = array_pop($terms_array)) { 
+            $url = $taxonomyRedirect;
+        } elseif ($globalRedirect = $this->getOption('unauthorized-redirect')) {
+            $url = get_permalink($globalRedirect);
+        }
+        
         wp_redirect($url);
     }
 

@@ -224,7 +224,6 @@ class WP_Classroom_Admin {
 	 		'no_terms'                   => __( 'No Courses', 'wp-classroom' ),
 	 		'items_list'                 => __( 'Course list', 'wp-classroom' ),
 			'items_list_navigation'      => __( 'Course list navigation', 'wp-classroom' ),
-			'course_redirect'            => __( 'No access to course', 'wp-classroom') 
 	 	);
 		$rewrite = array(
 			'slug'                       => 'course',
@@ -313,6 +312,7 @@ class WP_Classroom_Admin {
 			'name'     => __( 'Course Redirect', $this->plugin_name ),
 			'id'       => $prefix . 'course_redirect',
 			'type'    => 'text',
+			'object_types'     => array( 'term' ),
 			'taxonomies'  => array( 'wp_course' ),
 		));
 	}	
