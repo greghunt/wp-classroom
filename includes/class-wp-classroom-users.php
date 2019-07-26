@@ -149,10 +149,14 @@ class WP_Classroom_User
     {
         global $post;
         $url = wp_login_url();
-
+        $all_terms = get_the_terms($post->ID, get_taxonomies())[0];
+        $course_id = $all_terms->parent ? $all_terms->parent : $all_terms->term_id;
+        
         if ($postRedirect = get_post_meta($post->ID, 'wp_classroom_redirect', true)) {
             $url = get_permalink($postRedirect);
-        } elseif ($globalRedirect = $this->getOption('unauthorized-redirect')) {
+        }  elseif ($courseRedirect = get_term_meta( $course_id, '_wp_course_course_redirect', true )) {
+            $url = $courseRedirect;
+        }  elseif ($globalRedirect = $this->getOption('unauthorized-redirect')) {
             $url = get_permalink($globalRedirect);
         }
 

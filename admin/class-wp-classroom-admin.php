@@ -223,7 +223,8 @@ class WP_Classroom_Admin {
 	 		'not_found'                  => __( 'Not Found', 'wp-classroom' ),
 	 		'no_terms'                   => __( 'No Courses', 'wp-classroom' ),
 	 		'items_list'                 => __( 'Course list', 'wp-classroom' ),
-	 		'items_list_navigation'      => __( 'Course list navigation', 'wp-classroom' ),
+			'items_list_navigation'      => __( 'Course list navigation', 'wp-classroom' ),
+			'course_redirect'            => __( 'No access to course', 'wp-classroom') 
 	 	);
 		$rewrite = array(
 			'slug'                       => 'course',
@@ -278,6 +279,7 @@ class WP_Classroom_Admin {
 			'id'   => $prefix . 'redirect',
 			'type' => 'text_small',
 		) );
+		
 	}
 
 	/**
@@ -306,7 +308,14 @@ class WP_Classroom_Admin {
 			'select_all_button' => false,
 			'options' => $this->teacherOptions(),
 		) );
-	}
+
+		$cmb_term->add_field( array(
+			'name'     => __( 'Course Redirect', $this->plugin_name ),
+			'id'       => $prefix . 'course_redirect',
+			'type'    => 'text',
+			'taxonomies'  => array( 'wp_course' ),
+		));
+	}	
 
 	/**
 	* add order column to admin listing screen for classes
