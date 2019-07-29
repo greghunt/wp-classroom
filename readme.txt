@@ -3,8 +3,8 @@ Contributors: freshbrewedweb
 Donate link: https://freshbrewedweb.com
 Tags: classroom, education, school, woocommerce
 Requires at least: 3.7
-Tested up to: 4.9
-Stable tag: 2.1.7
+Tested up to: 5.2
+Stable tag: 2.2.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -55,6 +55,9 @@ This plugin was made to be particularly customizable and not too opinionated. To
 Hello, this is the first version.
 
 == Changelog ==
+
+= 2.2.6 =
+* Added ability to define redirects on course level.
 
 = 2.1.6 =
 * Updated CMB2

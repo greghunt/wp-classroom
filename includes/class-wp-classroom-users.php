@@ -4,7 +4,7 @@
  * access to courses and classes.
  *
  * @link       https://wordpress.org/plugins/classroom
- * @since      1.1.0
+ * @since      2.2.7
  *
  * @package    WP_Classroom
  * @subpackage WP_Classroom/includes

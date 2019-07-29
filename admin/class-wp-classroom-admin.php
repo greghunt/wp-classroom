@@ -3,7 +3,7 @@
  * The admin-specific functionality of the plugin.
  *
  * @link       http://example.com
- * @since      1.0.0
+ * @since      2.2.7
  *
  * @package    WP_Classroom
  * @subpackage WP_Classroom/admin
